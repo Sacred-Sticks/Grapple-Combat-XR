@@ -2,14 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &-3438387809978036471
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Righteous-Regular SDF Material
-  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
-  m_ShaderKeywords: 
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -51,7 +52,9 @@ Material:
     - _BumpOutline: 0
     - _ColorMask: 15
     - _CullMode: 0
+    - _Cutoff: 0.5
     - _Diffuse: 0.5
+    - _DiffusePower: 1
     - _FaceDilate: -1
     - _FaceUVSpeedX: 0
     - _FaceUVSpeedY: 0
@@ -67,6 +70,7 @@ Material:
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
     - _OutlineWidth: 0.81
+    - _Padding: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.90909094
@@ -88,12 +92,14 @@ Material:
     - _UnderlayOffsetX: 0
     - _UnderlayOffsetY: 0
     - _UnderlaySoftness: 0
+    - _UseUIAlphaClip: 0
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
     - _WeightBold: 0.75
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
@@ -121,7 +127,8 @@ MonoBehaviour:
   materialHashCode: -564538934
   m_Version: 1.1.0
   m_SourceFontFileGUID: 71b908552670b6b4daeb30b919ab116b
-  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 71b908552670b6b4daeb30b919ab116b, type: 3}
+  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 71b908552670b6b4daeb30b919ab116b,
+    type: 3}
   m_SourceFontFile: {fileID: 0}
   m_AtlasPopulationMode: 0
   m_FaceInfo:
