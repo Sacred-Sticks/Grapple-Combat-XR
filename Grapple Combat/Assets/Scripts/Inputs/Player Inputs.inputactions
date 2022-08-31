@@ -95,39 +95,39 @@
             "actions": [
                 {
                     "name": "Grip",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "3fdfab3b-81d0-4717-8d10-24a6a2dd5642",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Trigger",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "c9360a36-4a4b-47d5-be50-1e20b08a2ffa",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Primary",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "7aadca66-4048-4d71-8464-2e3aad59cdad",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Secondary",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "17efa407-c2a5-43ad-a31f-97042f7e150e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [

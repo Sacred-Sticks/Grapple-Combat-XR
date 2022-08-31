@@ -12,29 +12,29 @@ public class Inputs : MonoBehaviour
     [SerializeField] protected string secondaryName;
 
     protected InputAction gripAction, triggerAction, primaryAction, secondaryAction;
-    protected float gripValue, triggerValue, primaryValue, secondaryValue;
+    [SerializeField] private float gripValue, triggerValue, primaryValue, secondaryValue;
 
-    private void Awake()
+    protected void SetInputs()
     {
+        Debug.Log("Input awoken");
         var map = playerInputAsset.FindActionMap(actionMap);
 
         gripAction = map.FindAction(gripName);
-        triggerAction = map.FindAction(triggerName);
-        primaryAction = map.FindAction(primaryName);
-        secondaryAction = map.FindAction(secondaryName);
-
         gripAction.performed += OnGripChanged;
         gripAction.canceled += OnGripChanged;
         gripAction.Enable();
 
+        triggerAction = map.FindAction(triggerName);
         triggerAction.performed += OnTriggerChanged;
         triggerAction.canceled += OnTriggerChanged;
         triggerAction.Enable();
 
+        primaryAction = map.FindAction(primaryName);
         primaryAction.performed += OnPrimaryChanged;
         primaryAction.canceled += OnPrimaryChanged;
         primaryAction.Enable();
 
+        secondaryAction = map.FindAction(secondaryName);
         secondaryAction.performed += OnSecondaryChanged;
         secondaryAction.canceled += OnSecondaryChanged;
         secondaryAction.Enable();
