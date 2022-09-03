@@ -81,8 +81,8 @@ namespace Autohand.Demo {
         void Explode() {
             var hits = Physics.OverlapSphere(grenade.transform.position, explosionRadius);
             foreach(var hit in hits) {
-                if(AutoHandPlayer.Instance.body == hit.attachedRigidbody) {
-                    AutoHandPlayer.Instance.DisableGrounding(0.05f);
+                if(AutoHandPlayer._Instance.body == hit.attachedRigidbody) {
+                    AutoHandPlayer._Instance.DisableGrounding(0.05f);
                     var dist = Vector3.Distance(hit.attachedRigidbody.position, grenade.transform.position);
                     explosionForce *= 2;
                     hit.attachedRigidbody.AddExplosionForce(explosionForce - explosionForce * (dist / explosionRadius), grenade.transform.position, explosionRadius);

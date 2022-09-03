@@ -7,7 +7,7 @@
             "actions": [
                 {
                     "name": "Grip",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "3b98f0b3-af76-4690-b584-cab8e2b7b0f4",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "Trigger",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "67e5561e-c70b-4e02-9e0c-09ce0cc73126",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -25,7 +25,7 @@
                 },
                 {
                     "name": "Primary",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "d4f2798f-cf5c-45d0-a881-f0e8a80aaebc",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -34,7 +34,7 @@
                 },
                 {
                     "name": "Secondary",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "a2163921-30d6-4d0d-801e-6030022bce28",
                     "expectedControlType": "Button",
                     "processors": "",

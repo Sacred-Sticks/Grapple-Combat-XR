@@ -16,11 +16,11 @@ namespace Autohand {
 
         public void ActivateIgnoreCollision() {
             foreach(var col in colliders)
-                AutoHandPlayer.Instance.IgnoreCollider(col, true);
+                AutoHandPlayer._Instance.IgnoreCollider(col, true);
         }
         public void DeactivateIgnoreCollision() {
             foreach(var col in colliders)
-                AutoHandPlayer.Instance.IgnoreCollider(col, false);
+                AutoHandPlayer._Instance.IgnoreCollider(col, false);
         }
     }
 }

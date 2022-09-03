@@ -12,11 +12,10 @@ public class Inputs : MonoBehaviour
     [SerializeField] protected string secondaryName;
 
     protected InputAction gripAction, triggerAction, primaryAction, secondaryAction;
-    [SerializeField] private float gripValue, triggerValue, primaryValue, secondaryValue;
+    private float gripValue, triggerValue, primaryValue, secondaryValue;
 
     protected void SetInputs()
     {
-        Debug.Log("Input awoken");
         var map = playerInputAsset.FindActionMap(actionMap);
 
         gripAction = map.FindAction(gripName);

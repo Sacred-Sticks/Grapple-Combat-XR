@@ -400,7 +400,7 @@ namespace Autohand {
                 body.velocity = Vector3.MoveTowards(body.velocity, move * maxMoveSpeed, moveAcceleration * Time.fixedDeltaTime);
             }
 
-            //4. This creates extra drag when grounded to simulate foot strength, or if flying greats drag in every direction when not moving
+            //4. This creates extra drag when grounded to simulate foot strength, or if flying creats drag in every direction when not moving
             if (move.magnitude <= movementDeadzone && isGrounded)
                 body.velocity *= (1 - groundedDrag * (Time.realtimeSinceStartup - lastUpdateTime));
 

@@ -1,6 +1,10 @@
 using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
+using Autohand;
+using System.Runtime.CompilerServices;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using UnityEditor.Build.Content;
 
 [RequireComponent(typeof(LineRenderer))]
 public class Grapple : MonoBehaviour
@@ -12,13 +16,23 @@ public class Grapple : MonoBehaviour
     [SerializeField] private float inputThreshold = 0.5f;
     [Space]
     [Header("Grapple Data")]
-    [SerializeField] private Transform grappleSource;
     [SerializeField] private LayerMask grapplableLayers;
     [SerializeField] private GameObject player;
-    [SerializeField] private float _maxDistanceMultiplier, _minDistanceMultiplier, _spring, _damper, _massScale;
+    [Header("Joint Data")]
+    [SerializeField] private SpringData _springData;
+
+    [System.Serializable] public struct SpringData
+    {
+        public float spring;
+        public float damper;
+        public float massScale;
+        public float minDistance;
+        public float maxDistance;
+    }
 
     private SpringJoint joint;
     private LineRenderer lr;
+    private Rigidbody playerBody;
 
     private Vector3 _grapplePoint;
     private bool _isGrappling = false;
@@ -26,32 +40,31 @@ public class Grapple : MonoBehaviour
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        playerBody = player.GetComponent<Rigidbody>();
     }
 
     private IEnumerator Start()
     {
         // Separate to match the output with controller input, acts similar to Update Method
-
         if (leftController)
         {
             while (true)
             {
-                //CheckGrapple(LeftInputs.Instance);
-                yield return new WaitForEndOfFrame();
+                CheckGrapple(LeftInputs.Instance);
+                yield return new WaitForFixedUpdate();
             }
         }
         
         if (rightController)
         {
-            Debug.Log("Right Controller Active");
             while (true)
             {
                 CheckGrapple(RightInputs.Instance);
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
             }
         }
 
-        Debug.Log("You need to select either left or right handed on " + gameObject.name);
+        Debug.LogWarning("You need to select either left or right handed on " + gameObject.name);
     }
 
     private void LateUpdate()
@@ -65,11 +78,11 @@ public class Grapple : MonoBehaviour
     private void CheckGrapple(Inputs controllerInput)
     {
         float grip = controllerInput.GetGrip();
-        //Debug.Log(grip + " grip value");
+
+        Debug.Log(grip + " grip value " + controllerInput.name);
 
         if (grip > inputThreshold && !_isGrappling)
         {
-            _isGrappling = true;
             StartGrapple();
         }
         else if (grip < inputThreshold && _isGrappling)
@@ -81,30 +94,38 @@ public class Grapple : MonoBehaviour
 
     private void StartGrapple()
     {
-        RaycastHit hit;
-        Debug.Log("Starting Grapple");
-        if (Physics.Raycast(grappleSource.position, grappleSource.forward, out hit, 100, grapplableLayers))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, grapplableLayers))
         {
-            Debug.Log("Target Hit!");
+            _isGrappling = true;
             _grapplePoint = hit.point;
             joint = player.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = _grapplePoint;
 
-            float distanceFromPoint = Vector3.Distance(player.transform.position, _grapplePoint);
-
-            joint.maxDistance = distanceFromPoint * _maxDistanceMultiplier;
-            joint.minDistance = distanceFromPoint * _minDistanceMultiplier;
-
-            joint.spring = _spring;
-            joint.damper = _damper;
-            joint.massScale = _massScale;
-
             lr.positionCount = 2;
-        } else
-        {
-            Debug.Log("Missed Shot");
+
+            AdjustJointSettings();
+            //AdjustPlayerSettings();
         }
+    }
+
+    private void AdjustJointSettings()
+    {
+        float distance = Vector3.Distance(player.transform.position, _grapplePoint);
+
+        joint.minDistance = distance * _springData.minDistance;
+        joint.maxDistance = distance * _springData.maxDistance;
+
+        joint.spring = _springData.spring;
+        joint.damper = _springData.damper;
+        joint.massScale = _springData.massScale;
+    }
+
+    private void AdjustPlayerSettings()
+    {
+        // Stop any Movement Constraints
+        playerBody.constraints = RigidbodyConstraints.None;
+        playerBody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     public void StopGrapple()
@@ -116,6 +137,6 @@ public class Grapple : MonoBehaviour
     private void DrawRope()
     {
         lr.SetPosition(0, _grapplePoint);
-        lr.SetPosition(1, grappleSource.position);
+        lr.SetPosition(1, transform.position);
     }
 }

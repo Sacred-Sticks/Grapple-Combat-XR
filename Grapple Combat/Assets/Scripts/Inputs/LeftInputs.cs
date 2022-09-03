@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
-
 public class LeftInputs : Inputs
 {
     public static LeftInputs Instance;
@@ -8,5 +5,6 @@ public class LeftInputs : Inputs
     private void Awake()
     {
         Instance = this;
+        SetInputs();
     }
 }

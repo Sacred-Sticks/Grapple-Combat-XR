@@ -8,17 +8,17 @@ namespace Autohand.Demo{
         Vector3 startPos;
 
         void Start(){
-            if(AutoHandPlayer.Instance != null) {
-                startPos = AutoHandPlayer.Instance.transform.position;
+            if(AutoHandPlayer._Instance != null) {
+                startPos = AutoHandPlayer._Instance.transform.position;
                 if(!SceneManager.GetActiveScene().name.ToLower().Contains("demo"))
                     enabled = false;
             }
         }
         
         void Update() {
-            if(AutoHandPlayer.Instance != null) {
-                if(AutoHandPlayer.Instance.transform.position.y < -10f) {
-                    AutoHandPlayer.Instance.SetPosition(startPos);
+            if(AutoHandPlayer._Instance != null) {
+                if(AutoHandPlayer._Instance.transform.position.y < -10f) {
+                    AutoHandPlayer._Instance.SetPosition(startPos);
                 }
             }
         }

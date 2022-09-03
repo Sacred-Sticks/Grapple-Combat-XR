@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
-
 public class RightInputs : Inputs
 {
     public static RightInputs Instance;
