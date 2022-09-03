@@ -974,7 +974,7 @@ MonoBehaviour:
     spring: 4
     damper: 3
     massScale: 10
-    minDistance: 0.1
+    minDistance: 0.2
     maxDistance: 0.2
 --- !u!120 &568207198
 LineRenderer:
@@ -1096,7 +1096,7 @@ MonoBehaviour:
     spring: 4
     damper: 3
     massScale: 10
-    minDistance: 0.1
+    minDistance: 0.2
     maxDistance: 0.2
 --- !u!43 &600203262
 Mesh:

@@ -51,6 +51,8 @@ public class Grapple : MonoBehaviour
             while (true)
             {
                 CheckGrapple(LeftInputs.Instance);
+                if (joint != null)
+                    joint.anchor = transform.position - player.transform.position;
                 yield return new WaitForFixedUpdate();
             }
         }
@@ -60,6 +62,8 @@ public class Grapple : MonoBehaviour
             while (true)
             {
                 CheckGrapple(RightInputs.Instance);
+                if (joint != null)
+                    joint.anchor = transform.position - player.transform.position;
                 yield return new WaitForFixedUpdate();
             }
         }
@@ -105,7 +109,7 @@ public class Grapple : MonoBehaviour
             lr.positionCount = 2;
 
             AdjustJointSettings();
-            //AdjustPlayerSettings();
+            AutoHandPlayer.Instance.maxMoveSpeed = 0;
         }
     }
 
@@ -121,17 +125,11 @@ public class Grapple : MonoBehaviour
         joint.massScale = _springData.massScale;
     }
 
-    private void AdjustPlayerSettings()
-    {
-        // Stop any Movement Constraints
-        playerBody.constraints = RigidbodyConstraints.None;
-        playerBody.constraints = RigidbodyConstraints.FreezeRotation;
-    }
-
     public void StopGrapple()
     {
         Destroy(joint);
         lr.positionCount = 0;
+        AutoHandPlayer.Instance.maxMoveSpeed = 2;
     }
 
     private void DrawRope()
