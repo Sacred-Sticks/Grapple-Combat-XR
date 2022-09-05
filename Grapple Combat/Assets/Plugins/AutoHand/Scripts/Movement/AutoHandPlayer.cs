@@ -127,6 +127,9 @@ namespace Autohand {
         float movementDeadzone = 0.1f;
         float turnDeadzone = 0.4f;
 
+        [AutoToggleHeader("Custom Ground Check Data")]
+        public bool customGroundCheckData = true;
+
 
         public const string HandPlayerLayer = "HandPlayer";
         const int groundRayCount = 21;
@@ -134,10 +137,6 @@ namespace Autohand {
         public CapsuleCollider bodyCollider { get { return bodyCapsule; } }
 
         public Rigidbody body { get; private set; }
-
-        //DELETEME
-        public float speed;
-        public float fixedDeltaTime;
 
         float turnResetzone = 0.3f;
         float groundedOffset = 0.05f;
@@ -174,7 +173,12 @@ namespace Autohand {
         bool ignoreIterpolationFrame;
         Vector3 targetPosOffset;
         int handPlayerMask;
+        private BoxCollider groundingBox;
 
+        private void Awake()
+        {
+            groundingBox = GetComponent<BoxCollider>();
+        }
 
         public virtual void Start() {
 
@@ -343,7 +347,7 @@ namespace Autohand {
 
         /// <summary>Sets move direction for this fixedupdate</summary>
         public virtual void Move(Vector2 axis, bool useDeadzone = true, bool useRelativeDirection = false) {
-            if (GetComponent<SpringJoint>() != null)
+            if (!groundingBox.enabled)
             {
                 moveDirection.x = 0;
                 moveDirection.z = 0;
@@ -355,6 +359,7 @@ namespace Autohand {
                 if(useRelativeDirection)
                     moveDirection = transform.rotation * moveDirection;
             }
+            
         }
 
         public virtual void Turn(float turnAxis) {
