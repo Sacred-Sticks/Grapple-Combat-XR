@@ -10,9 +10,11 @@ public class Inputs : MonoBehaviour
     [SerializeField] protected string triggerName;
     [SerializeField] protected string primaryName;
     [SerializeField] protected string secondaryName;
+    [SerializeField] protected string joystickName;
 
-    protected InputAction gripAction, triggerAction, primaryAction, secondaryAction;
+    protected InputAction gripAction, triggerAction, primaryAction, secondaryAction, joystickAction;
     private float gripValue, triggerValue, primaryValue, secondaryValue;
+    private Vector2 joystickValue;
 
     protected void SetInputs()
     {
@@ -37,6 +39,11 @@ public class Inputs : MonoBehaviour
         secondaryAction.performed += OnSecondaryChanged;
         secondaryAction.canceled += OnSecondaryChanged;
         secondaryAction.Enable();
+
+        joystickAction = map.FindAction(joystickName);
+        joystickAction.performed += OnJoystickChanged;
+        joystickAction.canceled += OnJoystickChanged;
+        joystickAction.Enable();
     }
 
     private void OnGripChanged(InputAction.CallbackContext context)
@@ -54,6 +61,11 @@ public class Inputs : MonoBehaviour
     private void OnSecondaryChanged(InputAction.CallbackContext context)
     {
         secondaryValue = context.ReadValue<float>();
+    }
+
+    private void OnJoystickChanged(InputAction.CallbackContext context)
+    {
+        joystickValue = context.ReadValue<Vector2>();
     }
 
     public float GetGrip()
@@ -74,5 +86,10 @@ public class Inputs : MonoBehaviour
     public float GetSecondary()
     {
         return secondaryValue;
+    }
+
+    public Vector2 GetJoystick()
+    {
+        return joystickValue;
     }
 }

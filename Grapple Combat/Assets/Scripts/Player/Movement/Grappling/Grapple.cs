@@ -116,7 +116,6 @@ public class Grapple : MonoBehaviour
             lr.positionCount = 2;
 
             AdjustJointSettings();
-            AutoHandPlayer.Instance.maxMoveSpeed = 0;
         }
     }
 
@@ -136,7 +135,6 @@ public class Grapple : MonoBehaviour
     {
         Destroy(joint);
         lr.positionCount = 0;
-        AutoHandPlayer.Instance.maxMoveSpeed = 2;
     }
 
     private void DrawRope()

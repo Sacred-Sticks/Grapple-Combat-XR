@@ -364,15 +364,6 @@ namespace Autohand {
             
         }
 
-        public bool CheckGround()
-        {
-            if (Physics.Raycast(transform.position + transform.up, -Vector3.up, groundDistance + 1, groundLayers))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public virtual void Turn(float turnAxis) {
             turnAxis = (Mathf.Abs(turnAxis) > turnDeadzone) ? turnAxis : 0;
             turningAxis = turnAxis;

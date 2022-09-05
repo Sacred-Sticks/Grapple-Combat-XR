@@ -40,16 +40,14 @@ public class Jump : MonoBehaviour
             }
         }
 
-        Debug.Log("You need to select a hand for Jump.cs on " + gameObject.name);
+        Debug.LogWarning("You need to select a hand for Jump.cs on " + gameObject.name);
     }
 
     private void HandBasedUpdate(Inputs controllerInput)
     {
-        Debug.Log("Primary Value of Jumping is " + controllerInput.GetPrimary());
         if (controllerInput.GetPrimary() > inputData.inputThreshold)
         {
             AutoHandPlayer.Instance.Jump(jumpData.jumpForce);
-            Debug.Log("Jumped");
         }
     }
 }
