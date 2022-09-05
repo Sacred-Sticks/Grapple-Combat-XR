@@ -5,6 +5,8 @@ using Autohand.Demo;
 using System;
 using NaughtyAttributes;
 using UnityEngine.Serialization;
+using Unity.VisualScripting.ReorderableList;
+using System.Security.Cryptography;
 
 namespace Autohand {
     [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(CapsuleCollider)), DefaultExecutionOrder(-30)]
@@ -24,8 +26,6 @@ namespace Autohand {
                 return _Instance;
             }
         }
-
-
 
         [AutoHeader("Auto Hand Player")]
         public bool ignoreMe;
@@ -124,7 +124,6 @@ namespace Autohand {
         [EnableIf("useGrounding"), Tooltip("The layers that platforming will be enabled on, will not work with layers that the HandPlayer can't collide with")]
         public LayerMask platformingLayerMask = ~0;
 
-
         float movementDeadzone = 0.1f;
         float turnDeadzone = 0.4f;
 
@@ -175,7 +174,6 @@ namespace Autohand {
         bool ignoreIterpolationFrame;
         Vector3 targetPosOffset;
         int handPlayerMask;
-
 
 
         public virtual void Start() {
@@ -345,10 +343,18 @@ namespace Autohand {
 
         /// <summary>Sets move direction for this fixedupdate</summary>
         public virtual void Move(Vector2 axis, bool useDeadzone = true, bool useRelativeDirection = false) {
-            moveDirection.x = (!useDeadzone || Mathf.Abs(axis.x) > movementDeadzone) ? axis.x : 0;
-            moveDirection.z = (!useDeadzone || Mathf.Abs(axis.y) > movementDeadzone) ? axis.y : 0;
-            if(useRelativeDirection)
-                moveDirection = transform.rotation * moveDirection;
+            if (GetComponent<SpringJoint>() != null)
+            {
+                moveDirection.x = 0;
+                moveDirection.z = 0;
+            }
+            if (GroundCheck.Instance.CheckGround())
+            {
+                moveDirection.x = (!useDeadzone || Mathf.Abs(axis.x) > movementDeadzone) ? axis.x : 0;
+                moveDirection.z = (!useDeadzone || Mathf.Abs(axis.y) > movementDeadzone) ? axis.y : 0;
+                if(useRelativeDirection)
+                    moveDirection = transform.rotation * moveDirection;
+            }
         }
 
         public virtual void Turn(float turnAxis) {
@@ -1006,7 +1012,7 @@ namespace Autohand {
 
 
         Vector3 AlterDirection(Vector3 moveAxis) {
-            if(useGrounding)
+            if (useGrounding)
                 return Quaternion.AngleAxis(forwardFollow.eulerAngles.y, Vector3.up) * (new Vector3(moveAxis.x, moveAxis.y, moveAxis.z));
             else
                 return forwardFollow.rotation * (new Vector3(moveAxis.x, moveAxis.y, moveAxis.z));

@@ -9,19 +9,25 @@ using UnityEditor.Build.Content;
 [RequireComponent(typeof(LineRenderer))]
 public class Grapple : MonoBehaviour
 {
-    [Header("Input Data")]
-    [SerializeField] private bool leftController;
-    [SerializeField] private bool rightController;
+    [SerializeField] private InputData inputData;
     [Space]
-    [SerializeField] private float inputThreshold = 0.5f;
+    [SerializeField] private GrappleData grappleData;
     [Space]
-    [Header("Grapple Data")]
-    [SerializeField] private LayerMask grapplableLayers;
-    [SerializeField] private GameObject player;
-    [Header("Joint Data")]
-    [SerializeField] private SpringData _springData;
+    [SerializeField] private SpringData springData;
 
-    [System.Serializable] public struct SpringData
+    [System.Serializable] private struct InputData
+    {
+        public bool leftController;
+        public bool rightController;
+        public float inputThreshold;
+    }
+    [System.Serializable] private struct GrappleData
+    {
+        public LayerMask grapplableLayers;
+        public GameObject player;
+        public float maxRange;
+    }
+    [System.Serializable] private struct SpringData
     {
         public float spring;
         public float damper;
@@ -40,35 +46,38 @@ public class Grapple : MonoBehaviour
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
-        playerBody = player.GetComponent<Rigidbody>();
+        playerBody = grappleData.player.GetComponent<Rigidbody>();
     }
 
     private IEnumerator Start()
     {
         // Separate to match the output with controller input, acts similar to Update Method
-        if (leftController)
+        if (inputData.leftController)
         {
             while (true)
             {
-                CheckGrapple(LeftInputs.Instance);
-                if (joint != null)
-                    joint.anchor = transform.position - player.transform.position;
+                HandBasedUpdate(LeftInputs.Instance);
                 yield return new WaitForFixedUpdate();
             }
         }
         
-        if (rightController)
+        if (inputData.rightController)
         {
             while (true)
             {
-                CheckGrapple(RightInputs.Instance);
-                if (joint != null)
-                    joint.anchor = transform.position - player.transform.position;
+                HandBasedUpdate(RightInputs.Instance);
                 yield return new WaitForFixedUpdate();
             }
         }
 
-        Debug.LogWarning("You need to select either left or right handed on " + gameObject.name);
+        Debug.LogWarning("You must select a hand for Grapple.cs on " + gameObject.name);
+    }
+
+    private void HandBasedUpdate(Inputs controllerInput)
+    {
+        CheckGrapple(controllerInput);
+        if (joint != null)
+            joint.anchor = transform.position - grappleData.player.transform.position;
     }
 
     private void LateUpdate()
@@ -83,13 +92,11 @@ public class Grapple : MonoBehaviour
     {
         float grip = controllerInput.GetGrip();
 
-        Debug.Log(grip + " grip value " + controllerInput.name);
-
-        if (grip > inputThreshold && !_isGrappling)
+        if (grip > inputData.inputThreshold && !_isGrappling)
         {
             StartGrapple();
         }
-        else if (grip < inputThreshold && _isGrappling)
+        else if (grip < inputData.inputThreshold && _isGrappling)
         {
             _isGrappling = false;
             StopGrapple();
@@ -98,11 +105,11 @@ public class Grapple : MonoBehaviour
 
     private void StartGrapple()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, grapplableLayers))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, grappleData.maxRange, grappleData.grapplableLayers))
         {
             _isGrappling = true;
             _grapplePoint = hit.point;
-            joint = player.AddComponent<SpringJoint>();
+            joint = grappleData.player.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = _grapplePoint;
 
@@ -115,14 +122,14 @@ public class Grapple : MonoBehaviour
 
     private void AdjustJointSettings()
     {
-        float distance = Vector3.Distance(player.transform.position, _grapplePoint);
+        float distance = Vector3.Distance(grappleData.player.transform.position, _grapplePoint);
 
-        joint.minDistance = distance * _springData.minDistance;
-        joint.maxDistance = distance * _springData.maxDistance;
+        joint.minDistance = distance * springData.minDistance;
+        joint.maxDistance = distance * springData.maxDistance;
 
-        joint.spring = _springData.spring;
-        joint.damper = _springData.damper;
-        joint.massScale = _springData.massScale;
+        joint.spring = springData.spring;
+        joint.damper = springData.damper;
+        joint.massScale = springData.massScale;
     }
 
     public void StopGrapple()
