@@ -129,6 +129,25 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 568207189}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &111336642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111336635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005dd321ba155a24a933d7a412987578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputData:
+    leftController: 0
+    rightController: 1
+    inputThreshold: 0.5
+  jumpData:
+    jumpForce: 5
+    jumpCooldown: 0
 --- !u!43 &171801188
 Mesh:
   m_ObjectHideFlags: 0
@@ -742,7 +761,7 @@ PrefabInstance:
     - target: {fileID: 978722647479649263, guid: f13bbbc9578242a44953eec81cfb27d4,
         type: 3}
       propertyPath: useGrounding
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 978722647479649263, guid: f13bbbc9578242a44953eec81cfb27d4,
         type: 3}

@@ -349,7 +349,7 @@ namespace Autohand {
 
         /// <summary>Sets move direction for this fixedupdate</summary>
         public virtual void Move(Vector2 axis, bool useDeadzone = true, bool useRelativeDirection = false) {
-            if (!CheckGround())
+            if (!isGrounded || GetComponent<SpringJoint>() != null)
             {
                 moveDirection.x = 0;
                 moveDirection.z = 0;
@@ -728,7 +728,7 @@ namespace Autohand {
         }
 
 
-        public void Jump(float jumpPower = 1) {
+        public void Jump(float jumpPower) {
             if(isGrounded) {
                 DisableGrounding(0.1f);
                 body.useGravity = true;
