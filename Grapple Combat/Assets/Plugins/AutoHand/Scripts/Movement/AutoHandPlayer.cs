@@ -130,6 +130,8 @@ namespace Autohand {
         [AutoToggleHeader("Custom Ground Check Data")]
         public bool customGroundCheckData = true;
 
+        public float groundDistance;
+        public LayerMask groundLayers;
 
         public const string HandPlayerLayer = "HandPlayer";
         const int groundRayCount = 21;
@@ -347,7 +349,7 @@ namespace Autohand {
 
         /// <summary>Sets move direction for this fixedupdate</summary>
         public virtual void Move(Vector2 axis, bool useDeadzone = true, bool useRelativeDirection = false) {
-            if (!groundingBox.enabled)
+            if (!CheckGround())
             {
                 moveDirection.x = 0;
                 moveDirection.z = 0;
@@ -360,6 +362,15 @@ namespace Autohand {
                     moveDirection = transform.rotation * moveDirection;
             }
             
+        }
+
+        public bool CheckGround()
+        {
+            if (Physics.Raycast(transform.position + transform.up, -Vector3.up, groundDistance + 1, groundLayers))
+            {
+                return true;
+            }
+            return false;
         }
 
         public virtual void Turn(float turnAxis) {
