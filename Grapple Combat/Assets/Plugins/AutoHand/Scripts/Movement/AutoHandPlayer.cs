@@ -348,7 +348,7 @@ namespace Autohand {
                 moveDirection.x = 0;
                 moveDirection.z = 0;
             }
-            if (GroundCheck.Instance.CheckGround())
+            else
             {
                 moveDirection.x = (!useDeadzone || Mathf.Abs(axis.x) > movementDeadzone) ? axis.x : 0;
                 moveDirection.z = (!useDeadzone || Mathf.Abs(axis.y) > movementDeadzone) ? axis.y : 0;
