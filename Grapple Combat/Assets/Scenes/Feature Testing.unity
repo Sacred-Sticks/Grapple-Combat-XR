@@ -146,7 +146,7 @@ MonoBehaviour:
     rightController: 1
     inputThreshold: 0.5
   jumpData:
-    jumpForce: 5
+    jumpForce: 1
     jumpCooldown: 0
 --- !u!43 &171801188
 Mesh:
@@ -766,7 +766,7 @@ PrefabInstance:
     - target: {fileID: 978722647479649263, guid: f13bbbc9578242a44953eec81cfb27d4,
         type: 3}
       propertyPath: useGrounding
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 978722647479649263, guid: f13bbbc9578242a44953eec81cfb27d4,
         type: 3}
@@ -1775,7 +1775,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29256
+  m_Name: pb_Mesh29264
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

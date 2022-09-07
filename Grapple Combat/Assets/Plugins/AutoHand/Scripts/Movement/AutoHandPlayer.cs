@@ -349,7 +349,7 @@ namespace Autohand {
 
         /// <summary>Sets move direction for this fixedupdate</summary>
         public virtual void Move(Vector2 axis, bool useDeadzone = true, bool useRelativeDirection = false) {
-            if (!isGrounded || GetComponent<SpringJoint>() != null)
+            if (!CustomGroundCheck() || GetComponent<SpringJoint>() != null)
             {
                 moveDirection.x = 0;
                 moveDirection.z = 0;
@@ -360,8 +360,12 @@ namespace Autohand {
                 moveDirection.z = (!useDeadzone || Mathf.Abs(axis.y) > movementDeadzone) ? axis.y : 0;
                 if(useRelativeDirection)
                     moveDirection = transform.rotation * moveDirection;
-            }
-            
+            }   
+        }
+
+        public bool CustomGroundCheck()
+        {
+            return Physics.Raycast(transform.position + transform.up * groundDistance, Vector3.down, groundDistance * 2, groundLayers);
         }
 
         public virtual void Turn(float turnAxis) {
@@ -720,7 +724,7 @@ namespace Autohand {
 
 
         public void Jump(float jumpPower) {
-            if(isGrounded) {
+            if(CustomGroundCheck()) {
                 DisableGrounding(0.1f);
                 body.useGravity = true;
                 body.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
