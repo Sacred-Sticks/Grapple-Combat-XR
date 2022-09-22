@@ -4,7 +4,6 @@ using Autohand;
 using System.Runtime.CompilerServices;
 using NaughtyAttributes;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 
 [RequireComponent(typeof(LineRenderer))]
 public class Grapple : MonoBehaviour

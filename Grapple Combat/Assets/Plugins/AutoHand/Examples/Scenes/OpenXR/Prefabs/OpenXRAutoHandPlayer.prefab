@@ -8201,7 +8201,7 @@ PrefabInstance:
     - target: {fileID: 1688351218388564395, guid: 47257a0bc2266e643a667b9efda1ad19,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47257a0bc2266e643a667b9efda1ad19, type: 3}
@@ -8355,6 +8355,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 978722647479649261}
+    - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: inputData.leftController
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: inputData.rightController
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1666147937466536630, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -8379,6 +8394,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: grappleData.player
+      value: 
+      objectReference: {fileID: 978722647479649261}
+    - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: inputData.leftController
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: inputData.rightController
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3045734802298699786, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -8585,6 +8615,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.029526183
       objectReference: {fileID: 0}
+    - target: {fileID: 8519640400642827569, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8558779094901074478, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8634,6 +8669,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RobotHand (L)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685472768745978638, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9091990112482710348, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -8699,6 +8739,26 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7668830299334034045}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2808929201084440544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361731894682614131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b295a20f8c3a2f5499fb287a3f27a414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInputAsset: {fileID: -944628639613478452, guid: ed5524706b15da74787857689716517a,
+    type: 3}
+  actionMap: Left Controller
+  gripName: Grip
+  triggerName: Trigger
+  primaryName: Primary
+  secondaryName: Secondary
+  joystickName: Joystick
 --- !u!114 &7668830299334033921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8815,6 +8875,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7668830300715375532}
     m_Modifications:
+    - target: {fileID: 165222653978168724, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 165222653978168726, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: hand
@@ -8843,6 +8908,11 @@ PrefabInstance:
     - target: {fileID: 165222653978168726, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: ignoreMaxHandDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 165222654096874929, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1103049691967044778, guid: 386242486c5972145be957989b61c7df,
@@ -8955,6 +9025,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 978722647479649261}
     - target: {fileID: 1666147937466536630, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -8980,6 +9055,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: grappleData.player
+      value: 
+      objectReference: {fileID: 978722647479649261}
     - target: {fileID: 3045734802298699786, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -9145,6 +9225,16 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.016046247
       objectReference: {fileID: 0}
+    - target: {fileID: 5946326391348387561, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011493284038902720, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7593065013136658342, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -9184,6 +9274,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.0036643706
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868280509258151636, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519640400642827569, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8558779094901074478, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -9229,6 +9329,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RobotHand (R)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685472768745978638, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8846417437485729274, guid: 386242486c5972145be957989b61c7df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9091990112482710348, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -9294,6 +9404,26 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7668830299931688019}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2623312503608268745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361731896215635805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12a3d9df77a9144ba6e56d9eb31b3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInputAsset: {fileID: -944628639613478452, guid: ed5524706b15da74787857689716517a,
+    type: 3}
+  actionMap: Right Controller
+  gripName: Grip
+  triggerName: Trigger
+  primaryName: Primary
+  secondaryName: Secondary
+  joystickName: Joystick
 --- !u!114 &7668830299931688023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9618,7 +9748,7 @@ PrefabInstance:
     - target: {fileID: 4805486865076772358, guid: 2ff043c4542b8c440a4d4ff89ddf4c65,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4805486865076772359, guid: 2ff043c4542b8c440a4d4ff89ddf4c65,
         type: 3}
@@ -9857,6 +9987,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8831681786151451166}
     m_Modifications:
+    - target: {fileID: 7366831769009221700, guid: c86a0d692b08bbb4f868a301c507084c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7366831769009221701, guid: c86a0d692b08bbb4f868a301c507084c,
         type: 3}
       propertyPath: m_RootOrder
