@@ -6,7 +6,7 @@
             "id": "99b8ab4f-bc1b-4cd6-ad6c-65238d81ff35",
             "actions": [
                 {
-                    "name": "Grip",
+                    "name": "Grapple",
                     "type": "Button",
                     "id": "3b98f0b3-af76-4690-b584-cab8e2b7b0f4",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Trigger",
+                    "name": "Charge Fist",
                     "type": "Button",
                     "id": "67e5561e-c70b-4e02-9e0c-09ce0cc73126",
                     "expectedControlType": "Button",
@@ -55,22 +55,22 @@
                 {
                     "name": "",
                     "id": "6c84ff23-c08b-42f8-a89d-423a4fface57",
-                    "path": "<XRController>{LeftHand}/gripPressed",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Grip",
+                    "action": "Grapple",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "88bf81d8-da27-4bf1-ac50-4eed3a4d30d1",
-                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "path": "<XRController>{LeftHand}/gripPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Trigger",
+                    "action": "Charge Fist",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -114,7 +114,7 @@
             "id": "67283728-399a-4362-a527-fdfaa5384661",
             "actions": [
                 {
-                    "name": "Grip",
+                    "name": "Grapple",
                     "type": "Button",
                     "id": "3fdfab3b-81d0-4717-8d10-24a6a2dd5642",
                     "expectedControlType": "Button",
@@ -123,7 +123,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Trigger",
+                    "name": "Charge Fist",
                     "type": "Button",
                     "id": "c9360a36-4a4b-47d5-be50-1e20b08a2ffa",
                     "expectedControlType": "Button",
@@ -163,22 +163,22 @@
                 {
                     "name": "",
                     "id": "f471ec43-b914-42bd-8032-5d0ba58d320a",
-                    "path": "<XRController>{RightHand}/gripPressed",
+                    "path": "<XRController>{RightHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Grip",
+                    "action": "Grapple",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "22907b8b-a0ab-4227-9552-c634cb8325fb",
-                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "path": "<XRController>{RightHand}/gripPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Trigger",
+                    "action": "Charge Fist",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

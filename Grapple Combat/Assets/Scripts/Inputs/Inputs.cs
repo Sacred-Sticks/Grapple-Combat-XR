@@ -6,8 +6,8 @@ public class Inputs : MonoBehaviour
     [SerializeField] protected InputActionAsset playerInputAsset;
     [SerializeField] protected string actionMap;
     [Space]
-    [SerializeField] protected string gripName;
-    [SerializeField] protected string triggerName;
+    [SerializeField] protected string grappleName;
+    [SerializeField] protected string chargeName;
     [SerializeField] protected string primaryName;
     [SerializeField] protected string secondaryName;
     [SerializeField] protected string joystickName;
@@ -20,12 +20,12 @@ public class Inputs : MonoBehaviour
     {
         var map = playerInputAsset.FindActionMap(actionMap);
 
-        gripAction = map.FindAction(gripName);
+        gripAction = map.FindAction(grappleName);
         gripAction.performed += OnGripChanged;
         gripAction.canceled += OnGripChanged;
         gripAction.Enable();
 
-        triggerAction = map.FindAction(triggerName);
+        triggerAction = map.FindAction(chargeName);
         triggerAction.performed += OnTriggerChanged;
         triggerAction.canceled += OnTriggerChanged;
         triggerAction.Enable();

@@ -175,11 +175,17 @@ namespace Autohand {
         bool ignoreIterpolationFrame;
         Vector3 targetPosOffset;
         int handPlayerMask;
-        private BoxCollider groundingBox;
+        private bool isMovementOverridden;
+        private Vector3 overriddenVelocity;
 
-        private void Awake()
+        public void SetIsMovementOverridden(bool isMovementOverridden)
         {
-            groundingBox = GetComponent<BoxCollider>();
+            this.isMovementOverridden = isMovementOverridden;
+        }
+
+        public bool GetIsMovementOverridden()
+        {
+            return isMovementOverridden;
         }
 
         public virtual void Start() {
@@ -365,7 +371,7 @@ namespace Autohand {
 
         public bool CustomGroundCheck()
         {
-            return Physics.Raycast(transform.position + transform.up * groundDistance, Vector3.down, groundDistance * 2, groundLayers);
+            return Physics.Raycast(transform.position + transform.up * groundDistance ,Vector3.down, groundDistance * 2, groundLayers);
         }
 
         public virtual void Turn(float turnAxis) {
@@ -395,8 +401,18 @@ namespace Autohand {
             }
         }
 
+        public void SetOverridingVelocity(Vector3 overriddenVelocity)
+        {
+            this.overriddenVelocity = overriddenVelocity;
+        }
 
         protected virtual void UpdateRigidbody(Vector3 moveDir) {
+            if (isMovementOverridden)
+            {
+                body.velocity = overriddenVelocity;
+                return;
+            }
+
             var move = AlterDirection(moveDir);
             var yVel = body.velocity.y;
 

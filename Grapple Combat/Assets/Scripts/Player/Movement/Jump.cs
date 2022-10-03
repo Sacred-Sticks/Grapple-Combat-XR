@@ -16,38 +16,55 @@ public class Jump : MonoBehaviour
     }
     [System.Serializable] private struct JumpData
     {
-        public float jumpForce;
+        public float jumpHeight;
         public float jumpCooldown;
     }
 
-    private IEnumerator Start()
+    private float jumpForce;
+    private bool canJump = true;
+
+    private void Start()
     {
+        float time = Mathf.Sqrt(2 * -jumpData.jumpHeight / Physics.gravity.y);
+        float velocity = -Physics.gravity.y * time;
+        jumpForce = velocity;
+
+
         if (inputData.leftController)
         {
-            while (true)
-            {
-                HandBasedUpdate(LeftInputs.Instance);
-                yield return new WaitForEndOfFrame();
-            }
+            StartCoroutine(HandBasedUpdate(LeftInputs.Instance));
+            return;
         }
 
         if (inputData.rightController)
         {
-            while (true)
-            {
-                HandBasedUpdate(RightInputs.Instance);
-                yield return new WaitForEndOfFrame();
-            }
+            StartCoroutine(HandBasedUpdate(RightInputs.Instance));
+            return;
         }
 
         Debug.LogWarning("You need to select a hand for Jump.cs on " + gameObject.name);
     }
 
-    private void HandBasedUpdate(Inputs controllerInput)
+    private IEnumerator HandBasedUpdate(Inputs controllerInput)
     {
-        if (controllerInput.GetPrimary() > inputData.inputThreshold)
+        while (true)
         {
-            AutoHandPlayer.Instance.Jump(jumpData.jumpForce);
+            if (controllerInput.GetPrimary() > inputData.inputThreshold)
+            {
+                if (canJump)
+                {
+                    StartCoroutine(JumpTimer());
+                }
+            }
+            yield return new WaitForEndOfFrame();
         }
+    }
+
+    private IEnumerator JumpTimer()
+    {
+        AutoHandPlayer.Instance.Jump(jumpForce);
+        canJump = false;
+        yield return new WaitForSeconds(jumpData.jumpCooldown);
+        canJump = true;
     }
 }
