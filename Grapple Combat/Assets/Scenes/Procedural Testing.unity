@@ -396,12 +396,11 @@ MonoBehaviour:
   rooms:
     numRooms: 10
     block: {fileID: 5231343924657065167, guid: 8f4fcead18016f446a3cba77a44538e3, type: 3}
-    sizeMultiplier: 0.9
-    positionRangeX: {x: 0, y: 100}
-    positionRangeY: {x: 0, y: 20}
-    positionRangeZ: {x: 0, y: 100}
-    minimumDistance: 25
-    minimumSize: 12.5
+    sizeScale: 50
+    positionRangeX: {x: 0, y: 10}
+    positionRangeY: {x: 0, y: 2}
+    positionRangeZ: {x: 0, y: 10}
+    minimumDistance: 2.5
 --- !u!4 &1100665436
 Transform:
   m_ObjectHideFlags: 0

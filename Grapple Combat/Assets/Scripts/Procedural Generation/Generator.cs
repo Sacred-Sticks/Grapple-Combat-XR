@@ -22,14 +22,13 @@ public class Generator : MonoBehaviour
         [Header("Do Not Scale")]
         public int numRooms;
         public GameObject block;
-        public float sizeMultiplier;
+        public float sizeScale;
         [Space]
         [Header("Scale Together")]
         public Vector2 positionRangeX;
         public Vector2 positionRangeY;
         public Vector2 positionRangeZ;
         public float minimumDistance;
-        public float minimumSize;
     }
 
     private void Awake()
@@ -39,8 +38,17 @@ public class Generator : MonoBehaviour
 
     private void Start()
     {
+        UpdateRoomScales();
         List<GameObject> rooms = GeneratePlaceHolders();
         Debug.Log("Generated " + rooms.Count + " rooms");
+    }
+
+    private void UpdateRoomScales()
+    {
+        rooms.positionRangeX *= rooms.sizeScale;
+        rooms.positionRangeY *= rooms.sizeScale;
+        rooms.positionRangeZ *= rooms.sizeScale;
+        rooms.minimumDistance *= rooms.sizeScale;
     }
 
     private List<GameObject> GeneratePlaceHolders()
@@ -54,10 +62,11 @@ public class Generator : MonoBehaviour
 
         for (int i = 0; i < originPoints.Count; i++)
         {
-            room = Instantiate(rooms.block, originPoints[i] + Vector3.up * (int)Random.Range(rooms.positionRangeY.x, rooms.positionRangeY.y), Quaternion.Euler(0, 0, 0));
+            room = Instantiate(rooms.block, originPoints[i] + 
+                Vector3.up * (int)Random.Range(rooms.positionRangeY.x, rooms.positionRangeY.y), 
+                Quaternion.Euler(0, 0, 0));
             room.transform.localScale = roomSizes[i];
 
-            room.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
             allRooms.Add(room);
         }
 
@@ -76,15 +85,13 @@ public class Generator : MonoBehaviour
             closestRoom = FindLowestDistance(originPoints, currentRoom);
             roomSize = (closestRoom - currentRoom);
 
-            // Set all directions to be positive so they can function as side lengths
-            roomSize.x = Mathf.Abs(roomSize.x);
-            roomSize.y = Mathf.Abs(roomSize.y);
-            roomSize.z = Mathf.Abs(roomSize.z);
-            roomSize *= rooms.sizeMultiplier;
-            roomSize.x = (int)Mathf.Clamp(roomSize.x, rooms.minimumSize, Mathf.Infinity);
-            roomSize.y = (int)Mathf.Clamp(roomSize.y, rooms.minimumSize, Mathf.Infinity);
-            roomSize.z = (int)Mathf.Clamp(roomSize.z, rooms.minimumSize, Mathf.Infinity);
+            // Set Room Sizes based on closest room distance
 
+            float distance = Vector3.Distance(currentRoom, closestRoom);
+            int length = (int)Mathf.Sqrt(Mathf.Pow(distance, 2) / 2);
+            Vector3 random = new(Random.Range(0.75f, 1), Random.Range(0.25f, 0.5f), Random.Range(0.75f, 1));
+
+            roomSize = new((int)(length * random.x), (int)(length * random.y), (int)(length * random.z));
 
             roomSizes.Add(roomSize);
         }
