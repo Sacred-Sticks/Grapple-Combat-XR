@@ -125,7 +125,6 @@ public class WallRunning : MonoBehaviour
         // Cancel wallrun if not near wall
         if (surfaceNormal == Vector3.zero)
         {
-            Debug.Log("Not Near a wall");
             SetMovementOverride(false);
             canWallRun = false;
             canWallJump = true;

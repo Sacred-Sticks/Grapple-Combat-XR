@@ -8407,7 +8407,7 @@ PrefabInstance:
     - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: aimData.grappleLayer.m_Bits
-      value: 64
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 1666147937466536630, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -8452,7 +8452,7 @@ PrefabInstance:
     - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: grappleData.grapplableLayers.m_Bits
-      value: 64
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 3045734802298699786, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -8808,8 +8808,8 @@ MonoBehaviour:
   playerInputAsset: {fileID: -944628639613478452, guid: ed5524706b15da74787857689716517a,
     type: 3}
   actionMap: Left Controller
-  gripName: Grip
-  triggerName: Trigger
+  grappleName: Grapple
+  chargeName: Charge Fist
   primaryName: Primary
   secondaryName: Secondary
   joystickName: Joystick
@@ -9087,7 +9087,7 @@ PrefabInstance:
     - target: {fileID: 1305735679921497640, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: aimData.grappleLayer.m_Bits
-      value: 64
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 1666147937466536630, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -9122,7 +9122,7 @@ PrefabInstance:
     - target: {fileID: 2596173987388999584, guid: 386242486c5972145be957989b61c7df,
         type: 3}
       propertyPath: grappleData.grapplableLayers.m_Bits
-      value: 64
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 3045734802298699786, guid: 386242486c5972145be957989b61c7df,
         type: 3}
@@ -9493,8 +9493,8 @@ MonoBehaviour:
   playerInputAsset: {fileID: -944628639613478452, guid: ed5524706b15da74787857689716517a,
     type: 3}
   actionMap: Right Controller
-  gripName: Grip
-  triggerName: Trigger
+  grappleName: Grapple
+  chargeName: Charge Fist
   primaryName: Primary
   secondaryName: Secondary
   joystickName: Joystick
@@ -10210,6 +10210,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834320319295017360, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
         type: 3}
+      propertyPath: maxMoveSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834320319295017360, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
+        type: 3}
       propertyPath: useGrounding
       value: 0
       objectReference: {fileID: 0}
@@ -10236,12 +10241,17 @@ PrefabInstance:
     - target: {fileID: 8834320319295017360, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
         type: 3}
       propertyPath: groundLayers.m_Bits
-      value: 64
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 8834320319295017360, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
         type: 3}
       propertyPath: groundLayerMask.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834320319295017361, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8834320319295017362, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
         type: 3}
@@ -10387,7 +10397,7 @@ MonoBehaviour:
     rightController: 1
     inputThreshold: 0.5
   jumpData:
-    jumpForce: 5
+    jumpHeight: 2.5
     jumpCooldown: 0.1
 --- !u!114 &4660477347881646378
 MonoBehaviour:
@@ -10402,9 +10412,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallRunData:
-    wallRunningSpeed: 6
-    downwardSpeedClamp: -1
-  wallRunVelocity: {x: 0, y: 0, z: 0}
+    wallRunningSpeed: 5
+    wallRunTimer: 3
+    maxAngleDifference: 90
+    sidePushVelocity: 0.25
+  wallJumpData:
+    wallJumpX: 1.5
+    wallJumpY: 2
+    wallJumpSpeed: 8
+    minWallJumpX: 1
+    wallJumpCooldown: 0.1
+  gravityData:
+    wallRunGravityMultiplier: 0.2
+    standardGravityMultiplier: 1
 --- !u!114 &4739830004929644354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10418,11 +10438,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallCheckData:
-    radius: 0.25
-    maxDistance: 0.333
+    radius: 0.1
+    maxDistance: 0.5
     wallLayermask:
       serializedVersion: 2
-      m_Bits: 64
+      m_Bits: 256
 --- !u!114 &978722647479649263 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8834320319295017360, guid: fdc3ba53f4e81a040b0471bbbafbb10a,
