@@ -7,16 +7,8 @@ using Random = UnityEngine.Random;
 
 public class Generator : MonoBehaviour
 {
-    [SerializeField] private Tiles tiles;
     [SerializeField] private RoomData rooms;
 
-    [System.Serializable] private struct Tiles
-    {
-        public List<GameObject> floorTiles;
-        public List<GameObject> wallTiles;
-        public List<GameObject> ceilingTiles;
-        public Vector3 tileScale;
-    }
     [System.Serializable] private struct RoomData
     {
         [Header("Do Not Scale")]
@@ -173,5 +165,60 @@ public class Generator : MonoBehaviour
         //roomOrigin.y = 0;
 
         return roomOrigin;
+    }
+
+    private Vector3 GetCircumsphereOrigin(
+        double ax, double ay, double az, 
+        double bx, double by, double bz, 
+        double cx, double cy, double cz, 
+        double dx, double dy, double dz)
+    {
+        double denominator;
+
+        double bax = bx - ax;
+        double bay = by - ay;
+        double baz = bz - az;
+        double cax = cx - ax;
+        double cay = cy - ay;
+        double caz = cz - az;
+        double dax = dx - ax;
+        double day = dy - ay;
+        double daz = dz - az;
+
+
+        // Square the lengths of each edge
+        double lenBA = bax * bax + bay * bay + baz * baz;
+        double lenCA = cax * cax + cay * cay + caz * caz;
+        double lenDA = dax * dax + day * day + daz * daz;
+
+        // Cross the products of the edges
+
+        // B cross C
+
+        double crossBCX = (bay * caz - cay * baz);
+        double crossBCY = (baz * cax - caz * bax);
+        double crossBCZ = (bax * cay - cax * bay);
+
+        // C cross D
+
+        double crossCDX = (cay * daz - day * caz);
+        double crossCDY = (caz * dax - daz * cax);
+        double crossCDZ = (cax * day - dax * cay);
+
+        // D cross B
+
+        double crossDBX = (day * baz - bay * daz);
+        double crossDBY = (daz * bax - baz * dax);
+        double crossDBZ = (dax * bay - bax * day);
+
+        denominator = 0.5f / (bax * crossCDX + bay * crossCDY + baz * crossCDZ);
+
+        // Calculate offset of circumcenter from a
+        Vector3 circumcenter = new
+            ((float)((lenBA * crossCDX + lenCA * crossDBX + lenDA * crossBCX) * denominator + ax),
+            (float)((lenBA * crossCDY + lenCA * crossDBY + lenDA * crossBCY) * denominator + ay),
+            (float)((lenBA * crossCDZ + lenCA * crossDBZ + lenDA * crossBCZ) * denominator + az));
+
+        return circumcenter;
     }
 }
