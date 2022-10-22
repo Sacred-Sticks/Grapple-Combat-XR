@@ -1,19 +1,16 @@
-using Autohand;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.ProBuilder;
 
-public class Generator : MonoBehaviour
+public class RoomGenerator : MonoBehaviour
 {
-    [SerializeField] private RoomData rooms;
+    [SerializeField] private RoomData roomsData;
 
     [System.Serializable] private struct RoomData
     {
         [Header("Do Not Scale")]
         public int numRooms;
-        public GameObject block;
         public float sizeScale;
         [Space]
         [Header("Scale Together")]
@@ -23,47 +20,48 @@ public class Generator : MonoBehaviour
         public float minimumDistance;
     }
 
+    private List<Vertex> roomOrigins = new();
+    private List<Vector3> roomSizes = new();
+
+    private Delauney3D delauney;
+
     private void Awake()
     {
-
+        delauney = GetComponent<Delauney3D>();
     }
 
     private void Start()
     {
         UpdateRoomScales();
-        List<GameObject> rooms = GeneratePlaceHolders();
-        Debug.Log("Generated " + rooms.Count + " rooms");
+        GenerateRoomData();
+        delauney.BowyerWatson(roomOrigins);
     }
 
     private void UpdateRoomScales()
     {
-        rooms.positionRangeX *= rooms.sizeScale;
-        rooms.positionRangeY *= rooms.sizeScale;
-        rooms.positionRangeZ *= rooms.sizeScale;
-        rooms.minimumDistance *= rooms.sizeScale;
+        roomsData.positionRangeX *= roomsData.sizeScale;
+        roomsData.positionRangeY *= roomsData.sizeScale;
+        roomsData.positionRangeZ *= roomsData.sizeScale;
+        roomsData.minimumDistance *= roomsData.sizeScale;
     }
 
-    private List<GameObject> GeneratePlaceHolders()
+    private void GenerateRoomData()
     {
-        List<GameObject> allRooms = new();
-
+        List<Vertex> roomOrigins = new();
         List<Vector3> originPoints = GenerateOriginPoints();
         List<Vector3> roomSizes = GenerateSizes(ref originPoints);
 
-        GameObject room;
-
         for (int i = 0; i < originPoints.Count; i++)
         {
-            room = Instantiate(rooms.block, originPoints[i] + 
-                Vector3.up * (int)Random.Range(rooms.positionRangeY.x, rooms.positionRangeY.y), 
-                Quaternion.Euler(0, 0, 0));
-            room.transform.localScale = roomSizes[i];
+            originPoints[i] += Vector3.up * (int)Random.Range(roomsData.positionRangeY.x, roomsData.positionRangeY.y);
 
-            allRooms.Add(room);
+            Vertex v = new();
+            v.position = originPoints[i];
+            roomOrigins.Add(v);
         }
 
-
-        return allRooms;
+        this.roomOrigins = roomOrigins;
+        this.roomSizes = roomSizes;
     }
 
     private List<Vector3> GenerateSizes(ref List<Vector3> originPoints)
@@ -116,7 +114,7 @@ public class Generator : MonoBehaviour
         Vector3 roomOrigin = new();
         List<Vector3> roomPositions = new();
 
-        for (int i = 0; i < rooms.numRooms; i++)
+        for (int i = 0; i < roomsData.numRooms; i++)
         {
             if (!tooClose)
             {
@@ -137,18 +135,17 @@ public class Generator : MonoBehaviour
     {
         while (tooClose)
         {
-            roomOrigin = SetOrigin(rooms);
+            roomOrigin = SetOrigin(roomsData);
             tooClose = false;
             foreach (Vector3 pos in roomPositions)
             {
                 float distance = Vector3.Distance(roomOrigin, pos);
-                if (distance < rooms.minimumDistance)
+                if (distance < roomsData.minimumDistance)
                 {
                     tooClose = true;
                     break;
                 }
             }
-
             // break the loop if a spot for the room cannot be found
             loopCounter++;
             if (loopCounter > roomPositions.Count * 2) break;
@@ -161,64 +158,18 @@ public class Generator : MonoBehaviour
         roomOrigin.x = (int)Random.Range(rooms.positionRangeX.x, rooms.positionRangeX.y + 0.99f);
         roomOrigin.y = 0;
         roomOrigin.z = (int)Random.Range(rooms.positionRangeZ.x, rooms.positionRangeZ.y + 0.99f);
-
-        //roomOrigin.y = 0;
-
         return roomOrigin;
     }
 
-    private Vector3 GetCircumsphereOrigin(
-        double ax, double ay, double az, 
-        double bx, double by, double bz, 
-        double cx, double cy, double cz, 
-        double dx, double dy, double dz)
+    private void OnDrawGizmos()
     {
-        double denominator;
-
-        double bax = bx - ax;
-        double bay = by - ay;
-        double baz = bz - az;
-        double cax = cx - ax;
-        double cay = cy - ay;
-        double caz = cz - az;
-        double dax = dx - ax;
-        double day = dy - ay;
-        double daz = dz - az;
-
-
-        // Square the lengths of each edge
-        double lenBA = bax * bax + bay * bay + baz * baz;
-        double lenCA = cax * cax + cay * cay + caz * caz;
-        double lenDA = dax * dax + day * day + daz * daz;
-
-        // Cross the products of the edges
-
-        // B cross C
-
-        double crossBCX = (bay * caz - cay * baz);
-        double crossBCY = (baz * cax - caz * bax);
-        double crossBCZ = (bax * cay - cax * bay);
-
-        // C cross D
-
-        double crossCDX = (cay * daz - day * caz);
-        double crossCDY = (caz * dax - daz * cax);
-        double crossCDZ = (cax * day - dax * cay);
-
-        // D cross B
-
-        double crossDBX = (day * baz - bay * daz);
-        double crossDBY = (daz * bax - baz * dax);
-        double crossDBZ = (dax * bay - bax * day);
-
-        denominator = 0.5f / (bax * crossCDX + bay * crossCDY + baz * crossCDZ);
-
-        // Calculate offset of circumcenter from a
-        Vector3 circumcenter = new
-            ((float)((lenBA * crossCDX + lenCA * crossDBX + lenDA * crossBCX) * denominator + ax),
-            (float)((lenBA * crossCDY + lenCA * crossDBY + lenDA * crossBCY) * denominator + ay),
-            (float)((lenBA * crossCDZ + lenCA * crossDBZ + lenDA * crossBCZ) * denominator + az));
-
-        return circumcenter;
+        if (roomOrigins == null) return;
+        Gizmos.color = Color.red;
+        int rooms = 0;
+        for (int i = 0; i < roomOrigins.Count; i++)
+        {
+            Gizmos.DrawCube(roomOrigins[i].position, roomSizes[i]);
+            rooms = i;
+        }
     }
 }

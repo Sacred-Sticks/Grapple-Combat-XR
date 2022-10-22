@@ -366,6 +366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1100665436}
   - component: {fileID: 1100665435}
+  - component: {fileID: 1100665437}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -385,22 +386,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e36dc12342c72d4cb6b51a7ea19d7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiles:
-    floorTiles:
-    - {fileID: 5231343924657065167, guid: 8f4fcead18016f446a3cba77a44538e3, type: 3}
-    wallTiles:
-    - {fileID: 5231343924657065167, guid: 8f4fcead18016f446a3cba77a44538e3, type: 3}
-    ceilingTiles:
-    - {fileID: 5231343924657065167, guid: 8f4fcead18016f446a3cba77a44538e3, type: 3}
-    tileScale: {x: 5, y: 5, z: 5}
-  rooms:
-    numRooms: 10
-    block: {fileID: 5231343924657065167, guid: 8f4fcead18016f446a3cba77a44538e3, type: 3}
-    sizeScale: 50
+  roomsData:
+    numRooms: 20
+    sizeScale: 10
     positionRangeX: {x: 0, y: 10}
     positionRangeY: {x: 0, y: 2}
     positionRangeZ: {x: 0, y: 10}
-    minimumDistance: 2.5
+    minimumDistance: 1.25
 --- !u!4 &1100665436
 Transform:
   m_ObjectHideFlags: 0
@@ -416,3 +408,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1100665437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100665434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27eba435d28db024e850ad22916b0e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
