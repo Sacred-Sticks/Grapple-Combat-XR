@@ -367,6 +367,8 @@ GameObject:
   - component: {fileID: 1100665436}
   - component: {fileID: 1100665435}
   - component: {fileID: 1100665437}
+  - component: {fileID: 1100665439}
+  - component: {fileID: 1100665438}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -387,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomsData:
-    numRooms: 20
+    numRooms: 25
     sizeScale: 10
     positionRangeX: {x: 0, y: 10}
     positionRangeY: {x: 0, y: 2}
@@ -418,5 +420,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27eba435d28db024e850ad22916b0e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1100665438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100665434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11957e046c83b5a469e85c7948835f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1100665439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100665434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d12b0d8cee8834b97f934332aa5c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

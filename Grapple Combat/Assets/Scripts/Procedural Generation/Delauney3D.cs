@@ -1,29 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.ProBuilder;
-
-public class Edge
-{
-    public Vertex u;
-    public Vertex v;
-
-    public Edge()
-    {
-
-    }
-
-    public Edge(Vertex u, Vertex v)
-    {
-        this.u = u;
-        this.v = v;
-    }
-
-    public static bool CompareEdges(Edge left, Edge right)
-    {
-        return (left.u == right.u || left.u == right.v) && (left.v == right.u || left.v == right.v);
-    }
-}
 
 public class Delauney3D : MonoBehaviour
 {
@@ -31,12 +9,12 @@ public class Delauney3D : MonoBehaviour
 
     public class Tetrahedron
     {
-        public Vertex a;
-        public Vertex b;
-        public Vertex c;
-        public Vertex d;
+        public Node a;
+        public Node b;
+        public Node c;
+        public Node d;
 
-        public Vertex origin;
+        public Node origin;
         public float radius;
 
         public bool isBad;
@@ -46,7 +24,7 @@ public class Delauney3D : MonoBehaviour
 
         }
 
-        public Tetrahedron(Vertex a, Vertex b, Vertex c, Vertex d)
+        public Tetrahedron(Node a, Node b, Node c, Node d)
         {
             this.a = a;
             this.b = b;
@@ -59,16 +37,16 @@ public class Delauney3D : MonoBehaviour
         public void GetStats()
         {
             origin = GetCircumsphereOrigin(
-                a.position.x, a.position.y, a.position.z,
-                b.position.x, b.position.y, b.position.z,
-                c.position.x, c.position.y, c.position.z,
-                d.position.x, d.position.y, d.position.z);
+                a.Position.x, a.Position.y, a.Position.z,
+                b.Position.x, b.Position.y, b.Position.z,
+                c.Position.x, c.Position.y, c.Position.z,
+                d.Position.x, d.Position.y, d.Position.z);
 
-            radius = Vector3.Distance(origin.position, a.position);
+            radius = Vector3.Distance(origin.Position, a.Position);
             
         }
 
-        public Vertex GetCircumsphereOrigin(
+        public Node GetCircumsphereOrigin(
         double ax, double ay, double az,
         double bx, double by, double bz,
         double cx, double cy, double cz,
@@ -119,12 +97,11 @@ public class Delauney3D : MonoBehaviour
                 ((float)((lenBA * crossCDX + lenCA * crossDBX + lenDA * crossBCX) * denominator + ax),
                 (float)((lenBA * crossCDY + lenCA * crossDBY + lenDA * crossBCY) * denominator + ay),
                 (float)((lenBA * crossCDZ + lenCA * crossDBZ + lenDA * crossBCZ) * denominator + az));
-            Vertex v = new();
-            v.position = circumcenter;
-            return v;
+
+            return new(circumcenter);
         }
 
-        public bool ContainsVertex(Vertex v)
+        public bool ContainsVertex(Node v)
         {
             return (v == this.a || v == this.b || v == this.c || v == this.d);
         }
@@ -132,9 +109,9 @@ public class Delauney3D : MonoBehaviour
 
     public class Triangle
     {
-        public Vertex u;
-        public Vertex v;
-        public Vertex w;
+        public Node u;
+        public Node v;
+        public Node w;
 
         public bool isBad;
 
@@ -143,7 +120,7 @@ public class Delauney3D : MonoBehaviour
 
         }
 
-        public Triangle(Vertex u, Vertex v, Vertex w)
+        public Triangle(Node u, Node v, Node w)
         {
             this.u = u;
             this.v = v;
@@ -162,18 +139,18 @@ public class Delauney3D : MonoBehaviour
     #endregion
 
     #region Data
-    public List<Vertex> Vertices { get; private set; } = new();
-    public List<Edge> Edges { get; private set; } = new();
+    public List<Node> Nodes { get; private set; } = new();
+    public List<Branch> Edges { get; private set; } = new();
     public List<Triangle> Triangles { get; private set; } = new();
     public List<Tetrahedron> Tetrahedra { get; private set; } = new();
     #endregion
 
-    public static bool AlmostEqual(Vertex left, Vertex right)
+    public static bool AlmostEqual(Node left, Node right)
     {
-        return (left.position - right.position).sqrMagnitude < 0.01f;
+        return (left.Position - right.Position).sqrMagnitude < 0.01f;
     }
 
-    public void BowyerWatson(List<Vertex> vertices)
+    public void BowyerWatson(List<Node> Nodes)
     {
         float minX = Mathf.Infinity;
         float maxX = -Mathf.Infinity;
@@ -183,14 +160,14 @@ public class Delauney3D : MonoBehaviour
         float maxZ = -Mathf.Infinity;
 
         
-        foreach (Vertex vertex in vertices) // Get min and max for each position coordinate
+        foreach (Node node in Nodes) // Get min and max for each position coordinate
         {
-            if (vertex.position.x < minX) minX = vertex.position.x;
-            if (vertex.position.x > maxX) maxX = vertex.position.x;
-            if (vertex.position.y < minY) minY = vertex.position.y;
-            if (vertex.position.y > maxY) maxY = vertex.position.y;
-            if (vertex.position.z < minZ) minZ = vertex.position.z;
-            if (vertex.position.z > maxZ) maxZ = vertex.position.z;
+            if (node.Position.x < minX) minX = node.Position.x;
+            if (node.Position.x > maxX) maxX = node.Position.x;
+            if (node.Position.y < minY) minY = node.Position.y;
+            if (node.Position.y > maxY) maxY = node.Position.y;
+            if (node.Position.z < minZ) minZ = node.Position.z;
+            if (node.Position.z > maxZ) maxZ = node.Position.z;
         }
 
         float dx = maxX - minX;
@@ -198,23 +175,19 @@ public class Delauney3D : MonoBehaviour
         float dz = maxZ - minZ;
         float maxDelta = Mathf.Max(dx, dy, dz) * 5;
         float offset = 50;
-        Vertex p1 = new Vertex();
-        Vertex p2 = new Vertex();
-        Vertex p3 = new Vertex();
-        Vertex p4 = new Vertex();
-        p1.position = new Vector3(minX - offset  , minY - offset  , minZ - offset  );
-        p2.position = new Vector3(maxX + maxDelta, minY - offset  , minZ - offset  );
-        p3.position = new Vector3(minX - offset  , maxY + maxDelta, minZ - offset  );
-        p4.position = new Vector3(minX - offset  , minY - offset  , maxZ + maxDelta);
+        Node p1 = new(new Vector3(minX - offset, minY - offset, minZ - offset));
+        Node p2 = new(new Vector3(maxX + maxDelta, minY - offset, minZ - offset));
+        Node p3 = new(new Vector3(minX - offset, maxY + maxDelta, minZ - offset));
+        Node p4 = new(new Vector3(minX - offset, minY - offset, maxZ + maxDelta));
 
         Tetrahedra.Add(new Tetrahedron(p1, p2, p3, p4));
 
-        foreach (Vertex vertex in vertices)
+        foreach (Node node in Nodes)
         {
             List<Triangle> triangles = new();
             foreach (var t in Tetrahedra)
             {
-                if (t.radius > Vector3.Distance(t.origin.position, vertex.position))
+                if (t.radius > Vector3.Distance(t.origin.Position, node.Position))
                 {
                     t.isBad = true;
                     triangles.Add(new Triangle(t.a, t.b, t.c));
@@ -223,18 +196,6 @@ public class Delauney3D : MonoBehaviour
                     triangles.Add(new Triangle(t.b, t.c, t.d));
                 }
             }
-
-            //for (int i = 0; i < triangles.Count; i++)
-            //{
-            //    for (int j = 0; j < triangles.Count; j++)
-            //    {
-            //        if (Triangle.CompareTriangles(triangles[i], triangles[j]))
-            //        {
-            //            triangles[i].isBad = true;
-            //            triangles[j].isBad = true;
-            //        }
-            //    }
-            //}
 
             foreach (var t in triangles)
             {
@@ -247,6 +208,7 @@ public class Delauney3D : MonoBehaviour
                         if (count > 1)
                         {
                             t.isBad = true;
+                            break;
                         }
                     }
                 }
@@ -258,21 +220,21 @@ public class Delauney3D : MonoBehaviour
 
             foreach (Triangle triangle in triangles)
             {
-                Tetrahedra.Add(new Tetrahedron(triangle.u, triangle.v, triangle.w, vertex));
+                Tetrahedra.Add(new Tetrahedron(triangle.u, triangle.v, triangle.w, node));
             }
         }
 
         Tetrahedra.RemoveAll((Tetrahedron t) => t.ContainsVertex(p1) || t.ContainsVertex(p2) || t.ContainsVertex(p3) || t.ContainsVertex(p4));
 
         HashSet<Triangle> triangleHash = new();
-        HashSet<Edge> edgeHash = new();
+        HashSet<Branch> edgeHash = new();
 
         foreach (var t in Tetrahedra)
         {
-            Vertex a = t.a;
-            Vertex b = t.b;
-            Vertex c = t.c;
-            Vertex d = t.d;
+            Node a = t.a;
+            Node b = t.b;
+            Node c = t.c;
+            Node d = t.d;
 
             var abc = new Triangle(a, b, c);
             var abd = new Triangle(a, b, d);
@@ -288,12 +250,12 @@ public class Delauney3D : MonoBehaviour
             if (triangleHash.Add(bcd)) Triangles.Add(bcd);
 
 
-            var ab = new Edge(a, b);
-            var ac = new Edge(a, c);
-            var ad = new Edge(a, d);
-            var bc = new Edge(b, c);
-            var bd = new Edge(b, d);
-            var cd = new Edge(c, d);
+            var ab = new Branch(a, b);
+            var ac = new Branch(a, c);
+            var ad = new Branch(a, d);
+            var bc = new Branch(b, c);
+            var bd = new Branch(b, d);
+            var cd = new Branch(c, d);
 
             if (edgeHash.Add(ab)) Edges.Add(ab);
 
@@ -306,19 +268,6 @@ public class Delauney3D : MonoBehaviour
             if (edgeHash.Add(bd)) Edges.Add(bd);
             
             if (edgeHash.Add(cd)) Edges.Add(cd);
-        }
-
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (Edges == null) return;
-
-        Gizmos.color = Color.blue;
-
-        foreach (Edge edge in Edges)
-        {
-            Gizmos.DrawLine(edge.u.position, edge.v.position);
         }
     }
 }
