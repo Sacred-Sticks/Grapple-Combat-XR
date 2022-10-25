@@ -56,10 +56,7 @@ public class MinSpanTree : MonoBehaviour
         }
     }
 
-
     public List<Node> AllNodes { get; private set; } = new();
-    public List<Node> OpenNodes { get; private set; } = new();
-    public List<Node> ConnectedNodes { get; private set; } = new();
     public List<Branch> AllBranches { get; private set; } = new();
     public List<Branch> MinTreeBranches { get; private set; } = new();
     public List<Branch> NonTreeBranches { get; private set; } = new();
@@ -126,17 +123,6 @@ public class MinSpanTree : MonoBehaviour
         AddExtraBranches(maxNonTreeWeight);
     }
 
-    private void AddExtraBranches(float maxWeight)
-    {
-        foreach (Branch branch in NonTreeBranches)
-        {
-            if ((branch.weight / maxWeight) < .25)
-            {
-                MinTreeBranches.Add(branch);
-            }
-        }
-    }
-
     public void SortAllBranches()
     {
         for (var i = 0; i < AllBranches.Count; i++)
@@ -155,6 +141,17 @@ public class MinSpanTree : MonoBehaviour
                 var lowerValue = AllBranches[min];
                 AllBranches[min] = AllBranches[i];
                 AllBranches[i] = lowerValue;
+            }
+        }
+    }
+
+    private void AddExtraBranches(float maxWeight)
+    {
+        foreach (Branch branch in NonTreeBranches)
+        {
+            if ((branch.weight / maxWeight) < .2375f)
+            {
+                MinTreeBranches.Add(branch);
             }
         }
     }
