@@ -390,12 +390,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomsData:
-    numRooms: 25
-    sizeScale: 10
-    positionRangeX: {x: 0, y: 20}
-    positionRangeY: {x: 0, y: 1}
-    positionRangeZ: {x: 0, y: 20}
-    minimumDistance: 2.5
+    numRooms: 16
+    minimumUnitsDistance: 5
+  locationData:
+    tileRangeX: {x: 0, y: 40}
+    tileRangeY: {x: 0, y: 2}
+    tileRangeZ: {x: 0, y: 40}
+    sectionsGrid: {x: 2, y: 1, z: 2}
 --- !u!4 &1100665436
 Transform:
   m_ObjectHideFlags: 0
@@ -404,7 +405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100665434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -25, y: 0, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -447,6 +448,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94d12b0d8cee8834b97f934332aa5c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  branchWeightRatio: 0.5
+  branchPercentage: 0.2
 --- !u!114 &1100665440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,4 +462,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd21217aacdb3541940ec0e742c4626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitSize: 4
+  unitSize: 5

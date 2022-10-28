@@ -1,30 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RoomGenerator : MonoBehaviour
 {
     [SerializeField] private RoomData roomsData;
+    [SerializeField] private LocationData locationData;
 
     #region Data
-    public List<Node> roomOrigins { get; private set; } = new();
-    public List<Vector3Int> roomSizes { get; private set; } = new();
+    public List<Node> Nodes { get; private set; } = new();
     #endregion
 
     private Grid3D grid;
     int unitSize;
+    Vector3Int roomSection = new();
 
     [System.Serializable] private struct RoomData
     {
         [Header("Do Not Scale")]
         public int numRooms;
-        public int sizeScale;
         [Space]
-        [Header("Scale Together")]
-        public Vector2Int positionRangeX;
-        public Vector2Int positionRangeY;
-        public Vector2Int positionRangeZ;
-        public float minimumDistance;
+        [Header("Scaling Data")]
+        public float minimumUnitsDistance;
+    }
+    [System.Serializable] private struct LocationData
+    {
+        [Header("Size of Grid for room Spawning")]
+        public Vector2Int tileRangeX;
+        public Vector2Int tileRangeY;
+        public Vector2Int tileRangeZ;
+        [Header("Spread Spawning by Grid Cells")]
+        public Vector3Int sectionsGrid;
     }
 
     private void Awake()
@@ -35,57 +43,60 @@ public class RoomGenerator : MonoBehaviour
 
     public void GenerateRoomData()
     {
-        roomOrigins = new();
-        List<Vector3Int> originPoints = GenerateOriginPoints();
-        roomSizes = GenerateSizes(ref originPoints);
+        Nodes = new();
+        List<Vector3> originPoints = GenerateOriginPoints();
+        List<Vector3> roomSizes = GenerateSizes(ref originPoints);
 
         for (int i = 0; i < originPoints.Count; i++)
         {
-            int y = Random.Range(roomsData.positionRangeY.x, roomsData.positionRangeY.y);
+            int y = (int)Random.Range(locationData.tileRangeY.x, locationData.tileRangeY.y + unitSize - 0.1f);
             y /= unitSize;
             y *= unitSize;
-            originPoints[i] += Vector3Int.up * y;
+            originPoints[i] += Vector3.up.y * roomSizes[i] / 2 + Vector3.up * y;
 
-            Node v = new(originPoints[i]);
-            roomOrigins.Add(v);
+            Node v = new(originPoints[i], roomSizes[i]);
+            Nodes.Add(v);
         }
     }
 
     public void GetGridCoordinates(ref Vector2Int x, ref Vector2Int y, ref Vector2Int z)
     {
-        x = roomsData.positionRangeX;
-        y = roomsData.positionRangeY;
-        z = roomsData.positionRangeZ;
+        x = locationData.tileRangeX;
+        y = locationData.tileRangeY;
+        z = locationData.tileRangeZ;
     }
 
     private void UpdateRoomScales()
     {
-        roomsData.positionRangeX *= roomsData.sizeScale;
-        roomsData.positionRangeY *= roomsData.sizeScale;
-        roomsData.positionRangeZ *= roomsData.sizeScale;
-        roomsData.minimumDistance *= roomsData.sizeScale;
+        roomsData.minimumUnitsDistance *= grid.GetUnitSize();
         unitSize = grid.GetUnitSize();
-        roomsData.minimumDistance = Mathf.Max(unitSize, roomsData.minimumDistance);
+        locationData.tileRangeX *= unitSize;
+        locationData.tileRangeY *= unitSize;    
+        locationData.tileRangeZ *= unitSize;
+        //roomsData.minimumDistance = Mathf.Max(unitSize, roomsData.minimumDistance);
     }
 
-    private List<Vector3Int> GenerateSizes(ref List<Vector3Int> originPoints)
+    private List<Vector3> GenerateSizes(ref List<Vector3> originPoints)
     {
-        List<Vector3Int> roomSizes = new();
+        List<Vector3> roomSizes = new();
         Vector3 closestRoom;
         Vector3Int roomSize;
 
-        foreach(Vector3Int currentRoom in originPoints)
+        foreach(Vector3 currentRoom in originPoints)
         {
             // Set Room Sizes based on closest room distance
-            closestRoom = FindLowestDistance(originPoints, currentRoom);
+            // Add Modification to delete rooms that are too small are recalculate size
+            closestRoom = FindClosestRoom(originPoints, currentRoom);
             float distance = Vector3.Distance(currentRoom, closestRoom);
-            int length = (int)Mathf.Sqrt(Mathf.Pow(distance, 2) / 2);
-            Vector3 random = new(Random.Range(0.75f, 1), Random.Range(1, 3), Random.Range(0.75f, 1));
+            float length = Mathf.Sqrt(Mathf.Pow(distance, 2) / 2);
+            Vector3 random = new(Random.Range(0.75f, 1), Random.Range(0.2f, 0.4f), Random.Range(0.75f, 1));
 
-            roomSize = new(
-                (int)(length * random.x), 
-                (int)random.y * unitSize, 
-                (int)(length * random.z));
+            roomSize = new()
+            {
+                x = Mathf.Max((int)(length * random.x), unitSize),
+                y = Mathf.Max((int)(length * random.y), unitSize),
+                z = Mathf.Max((int)(length * random.z), unitSize)
+            };
 
             roomSize /= unitSize;
             roomSize *= unitSize;
@@ -95,18 +106,18 @@ public class RoomGenerator : MonoBehaviour
         return roomSizes;
     }
 
-    private Vector3 FindLowestDistance(List<Vector3Int> originPoints, Vector3Int currentRoom)
+    private Vector3 FindClosestRoom(List<Vector3> originPoints, Vector3 currentRoom)
     {
-        float minimumDistance = Mathf.Infinity;
+        double lowestDistance = Mathf.Infinity;
         Vector3 closestRoom = new();
         foreach (Vector3 comparisonRoom in originPoints)
         {
             if (currentRoom != comparisonRoom)
             {
                 float dist = Vector3.Distance(currentRoom, comparisonRoom);
-                if (dist < minimumDistance)
+                if (dist < lowestDistance)
                 {
-                    minimumDistance = dist;
+                    lowestDistance = dist;
                     closestRoom = comparisonRoom;
                 }
             }
@@ -114,19 +125,24 @@ public class RoomGenerator : MonoBehaviour
         return closestRoom;
     }
 
-    private List<Vector3Int> GenerateOriginPoints()
+    private List<Vector3> GenerateOriginPoints()
     {
         bool tooClose = false;
-        Vector3Int roomOrigin = new();
-        List<Vector3Int> roomPositions = new();
+        Vector3 roomOrigin = SetOrigin(locationData);
+        List<Vector3> roomPositions = new();
 
         for (int i = 0; i < roomsData.numRooms; i++)
         {
             if (!tooClose)
             {
-                roomOrigin /= unitSize * 2;
-                roomOrigin *= unitSize * 2;
                 roomPositions.Add(roomOrigin);
+                roomSection.x++;
+                if (roomSection.x >= locationData.sectionsGrid.x)
+                {
+                    roomSection.x = 0;
+                    roomSection.z++;
+                }
+                if (roomSection.z >= locationData.sectionsGrid.z) roomSection.z = 0;
             }
 
             // reset data for the distance-checking while-loop
@@ -139,16 +155,16 @@ public class RoomGenerator : MonoBehaviour
         return roomPositions;
     }
 
-    private void CheckDistanceToOtherRooms(ref bool tooClose, ref Vector3Int roomOrigin, List<Vector3Int> roomPositions, ref int loopCounter)
+    private void CheckDistanceToOtherRooms(ref bool tooClose, ref Vector3 roomOrigin, List<Vector3> roomPositions, ref int loopCounter)
     {
         while (tooClose)
         {
-            roomOrigin = SetOrigin(roomsData);
+            roomOrigin = SetOrigin(locationData);
             tooClose = false;
             foreach (Vector3 pos in roomPositions)
             {
                 float distance = Vector3.Distance(roomOrigin, pos);
-                if (distance < roomsData.minimumDistance)
+                if (distance < roomsData.minimumUnitsDistance)
                 {
                     tooClose = true;
                     break;
@@ -160,12 +176,24 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    private Vector3Int SetOrigin(RoomData rooms)
+    private Vector3Int SetOrigin(LocationData locationData)
     {
         Vector3Int roomOrigin = new();
-        roomOrigin.x = (int)Random.Range(rooms.positionRangeX.x, rooms.positionRangeX.y + 0.99f);
+        //roomOrigin.x = Random.Range(locationData.positionRangeX.x, locationData.positionRangeX.y);
+        //roomOrigin.y = 0;
+        //roomOrigin.z = Random.Range(locationData.positionRangeZ.x, locationData.positionRangeZ.y);
+
+        int xDif = (locationData.tileRangeX.y - locationData.tileRangeX.x) / locationData.sectionsGrid.x;
+        int yDif = (locationData.tileRangeY.y - locationData.tileRangeY.x) / locationData.sectionsGrid.y;
+        int zDif = (locationData.tileRangeZ.y - locationData.tileRangeZ.x) / locationData.sectionsGrid.z;
+
+        // New Origin Test
+        roomOrigin.x = xDif * roomSection.x + Random.Range(0, xDif);
         roomOrigin.y = 0;
-        roomOrigin.z = (int)Random.Range(rooms.positionRangeZ.x, rooms.positionRangeZ.y + 0.99f);
+        roomOrigin.z = zDif * roomSection.z + Random.Range(0, zDif);
+
+        roomOrigin /= unitSize * 2;
+        roomOrigin *= unitSize * 2;
         return roomOrigin;
     }
 }

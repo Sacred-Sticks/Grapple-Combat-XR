@@ -152,12 +152,12 @@ public class Delauney3D : MonoBehaviour
 
     public void BowyerWatson(List<Node> Nodes)
     {
-        float minX = Mathf.Infinity;
-        float maxX = -Mathf.Infinity;
-        float minY = Mathf.Infinity;
-        float maxY = -Mathf.Infinity;
-        float minZ = Mathf.Infinity;
-        float maxZ = -Mathf.Infinity;
+        float minX = Nodes[0].Position.x;
+        float maxX = Nodes[0].Position.x;
+        float minY = Nodes[0].Position.y;
+        float maxY = Nodes[0].Position.y;
+        float minZ = Nodes[0].Position.z;
+        float maxZ = Nodes[0].Position.z;
 
         
         foreach (Node node in Nodes) // Get min and max for each position coordinate
@@ -174,7 +174,7 @@ public class Delauney3D : MonoBehaviour
         float dy = maxY - minY;
         float dz = maxZ - minZ;
         float maxDelta = Mathf.Max(dx, dy, dz) * 5;
-        float offset = 50;
+        float offset = 0;
         Node p1 = new(new Vector3(minX - offset, minY - offset, minZ - offset));
         Node p2 = new(new Vector3(maxX + maxDelta, minY - offset, minZ - offset));
         Node p3 = new(new Vector3(minX - offset, maxY + maxDelta, minZ - offset));

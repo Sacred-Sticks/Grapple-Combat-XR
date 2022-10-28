@@ -30,6 +30,7 @@ public class Branch
 public class Node
 {
     public Vector3 Position { get; private set; }
+    public Vector3 Size { get; private set; }
     public List<Branch> Branches { get; private set; } = new();
     public HashSet<Vector3> Destinations { get; private set; } = new();
 
@@ -43,6 +44,12 @@ public class Node
         this.Position = position;
     }
 
+    public Node(Vector3 position, Vector3 size)
+    {
+        this.Position = position;
+        this.Size = size;
+    }
+
     public void AddBranch(Branch branch)
     {
         Branches.Add(branch);
@@ -52,7 +59,6 @@ public class Node
 public class DungeonGeneration : MonoBehaviour
 {
     public List<Node> Nodes { get; private set; } = new();
-    public List<Vector3Int> RoomSizes { get; private set; } = new();
     public List<Branch> Branches { get; private set; } = new();
 
     private RoomGenerator roomGenerator;
@@ -71,39 +77,38 @@ public class DungeonGeneration : MonoBehaviour
     private void Start()
     {
         roomGenerator.GenerateRoomData();
-        Nodes = roomGenerator.roomOrigins;
-        RoomSizes = roomGenerator.roomSizes;
+        Nodes = roomGenerator.Nodes;
         Vector2Int xSize = new(), ySize = new(), zSize = new();
         roomGenerator.GetGridCoordinates(ref xSize, ref ySize, ref zSize);
-        Destroy(roomGenerator);
+        //Destroy(roomGenerator);
 
         delauney.BowyerWatson(Nodes);
         Branches = delauney.Edges;
-        Destroy(delauney);
+        //Destroy(delauney);
 
         minSpanTree.GetTree(Nodes, Branches);
         Branches = minSpanTree.MinTreeBranches;
-        Destroy(minSpanTree);
+        Nodes = minSpanTree.AllNodes;
+        //Destroy(minSpanTree);
     }
 
     private void OnDrawGizmos()
     {
-        if (Branches == null) return;
-        Gizmos.color = Color.blue;
-        foreach (Branch e in Branches)
-        {
-            Gizmos.DrawLine(e.u.Position, e.v.Position);
-            float xDif = Mathf.Abs(e.u.Position.x - e.v.Position.x);
-            float yDif = Mathf.Abs(e.u.Position.y - e.v.Position.y);
-            float zDif = Mathf.Abs(e.u.Position.z - e.v.Position.z);
-            Debug.Log("Branch X = " + xDif + ", Branch Y = " + yDif + ", Branch Z = " + zDif);
-        }
-
         if (Nodes == null) return;
         Gizmos.color = Color.red;
         for (int i = 0; i < Nodes.Count; i++)
         {
-            Gizmos.DrawCube(Nodes[i].Position, RoomSizes[i]);
+            Gizmos.DrawCube(Nodes[i].Position, Nodes[i].Size);
         }
+
+        if (Branches == null) return;
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < Branches.Count; i++)
+        {
+            Gizmos.DrawLine(Branches[i].u.Position, Branches[i].v.Position);
+        }
+
+        Debug.Log("Generated " + Nodes.Count + " rooms");
+        Debug.Log("Generated " + Branches.Count + " branches");
     }
 }

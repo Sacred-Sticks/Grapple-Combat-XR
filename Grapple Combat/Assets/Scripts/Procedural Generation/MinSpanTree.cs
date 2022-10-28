@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MinSpanTree : MonoBehaviour
 {
+    [SerializeField] private float branchWeightRatio;
+    [SerializeField] private float branchPercentage;
     public class UnionFind
     {
         public List<Node> AllNodes { get; private set; } = new();
@@ -57,6 +59,7 @@ public class MinSpanTree : MonoBehaviour
     }
 
     public List<Node> AllNodes { get; private set; } = new();
+    public List<Node> BadNodes { get; private set; } = new();
     public List<Branch> AllBranches { get; private set; } = new();
     public List<Branch> MinTreeBranches { get; private set; } = new();
     public List<Branch> NonTreeBranches { get; private set; } = new();
@@ -65,6 +68,7 @@ public class MinSpanTree : MonoBehaviour
     {
         AssignNodes(Nodes, branches);
         CreateMinimumSpanningTree();
+        RemoveUnconnectedNodes();
     }
 
     private void AssignNodes(List<Node> Nodes, List<Branch> branches)
@@ -100,22 +104,30 @@ public class MinSpanTree : MonoBehaviour
         UnionFind uf = new(AllNodes);
         float maxNonTreeWeight = -Mathf.Infinity;
 
+        foreach (Branch branch in AllBranches)
+        {
+            //NonTreeBranches.Add(branch);
+        }
+
         //while (MinTreeBranches.Count < AllNodes.Count - 1)
-        for (int i = 0; i < AllNodes.Count; i++)
+        for (int i = 0; i < AllNodes.Count; i++) 
         {
             foreach (Branch branch in AllBranches)
             {
                 if (!NonTreeBranches.Contains(branch))
                 {
                     if (!uf.Connected(branch.u, branch.v)) {
-                        uf.MakeUnion(branch.u, branch.v);
-                        MinTreeBranches.Add(branch);
-                        break;
+                        if (branch.u.Position != branch.v.Position) {
+                            uf.MakeUnion(branch.u, branch.v);
+                            MinTreeBranches.Add(branch);
+                            break;
+                        }
+                    } else
+                    {
+                        // When it forms a cycle, add to NonTreeBranches to avoid rechecking it
+                        NonTreeBranches.Add(branch);
+                        if (branch.weight > maxNonTreeWeight) maxNonTreeWeight = branch.weight;
                     }
-
-                    // When it forms a cycle, add to NonTreeBranches to avoid rechecking it
-                    NonTreeBranches.Add(branch);
-                    if (branch.weight > maxNonTreeWeight) maxNonTreeWeight = branch.weight;
                 }
             }
         }
@@ -123,7 +135,7 @@ public class MinSpanTree : MonoBehaviour
         AddExtraBranches(maxNonTreeWeight);
     }
 
-    public void SortAllBranches()
+    private void SortAllBranches()
     {
         for (var i = 0; i < AllBranches.Count; i++)
         {
@@ -149,10 +161,45 @@ public class MinSpanTree : MonoBehaviour
     {
         foreach (Branch branch in NonTreeBranches)
         {
-            if ((branch.weight / maxWeight) < .2375f)
+            if ((branch.weight / maxWeight) < branchWeightRatio)
             {
-                MinTreeBranches.Add(branch);
+                bool canAdd = true;
+                foreach (Branch treeBranch in MinTreeBranches)
+                {
+                    if (Branch.CompareEdges(branch, treeBranch)) canAdd = false;
+                }
+                if (Random.Range(0.0f, 1.0f) < branchPercentage)
+                    if (canAdd) 
+                        MinTreeBranches.Add(branch);
+            } else
+            {
+                break;
             }
+        }
+    }
+
+    private void RemoveUnconnectedNodes()
+    {
+        foreach (Node node in AllNodes)
+        {
+            BadNodes.Add(node);
+        }
+
+        foreach (Branch branch in MinTreeBranches)
+        {
+            if (BadNodes.Contains(branch.u))
+            {
+                BadNodes.Remove(branch.u);
+            }
+            if (BadNodes.Contains(branch.v))
+            {
+                BadNodes.Remove(branch.v);
+            }
+        }
+
+        foreach (Node node in BadNodes)
+        {
+            AllNodes.Remove(node);
         }
     }
 }
