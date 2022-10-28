@@ -95,6 +95,7 @@ public class DungeonGeneration : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (Nodes == null) return;
+        
         Gizmos.color = Color.red;
         for (int i = 0; i < Nodes.Count; i++)
         {
@@ -107,8 +108,5 @@ public class DungeonGeneration : MonoBehaviour
         {
             Gizmos.DrawLine(Branches[i].u.Position, Branches[i].v.Position);
         }
-
-        Debug.Log("Generated " + Nodes.Count + " rooms");
-        Debug.Log("Generated " + Branches.Count + " branches");
     }
 }

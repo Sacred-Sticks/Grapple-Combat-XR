@@ -6,8 +6,10 @@ using Random = UnityEngine.Random;
 
 public class RoomGenerator : MonoBehaviour
 {
-    [SerializeField] private RoomData roomsData;
-    [SerializeField] private LocationData locationData;
+    [SerializeField]
+    private RoomData roomsData;
+    [SerializeField]
+    private LocationData locationData;
 
     #region Data
     public List<Node> Nodes { get; private set; } = new();
@@ -17,7 +19,8 @@ public class RoomGenerator : MonoBehaviour
     int unitSize;
     Vector3Int roomSection = new();
 
-    [System.Serializable] private struct RoomData
+    [System.Serializable]
+    private struct RoomData
     {
         [Header("Do Not Scale")]
         public int numRooms;
@@ -25,7 +28,8 @@ public class RoomGenerator : MonoBehaviour
         [Header("Scaling Data")]
         public float minimumUnitsDistance;
     }
-    [System.Serializable] private struct LocationData
+    [System.Serializable]
+    private struct LocationData
     {
         [Header("Size of Grid for room Spawning")]
         public Vector2Int tileRangeX;
@@ -52,7 +56,7 @@ public class RoomGenerator : MonoBehaviour
             int y = (int)Random.Range(locationData.tileRangeY.x, locationData.tileRangeY.y + unitSize - 0.1f);
             y /= unitSize;
             y *= unitSize;
-            originPoints[i] += Vector3.up.y * roomSizes[i] / 2 + Vector3.up * y;
+            originPoints[i] += Vector3.up * roomSizes[i].y / 2 + Vector3.up * y;
 
             Node v = new(originPoints[i], roomSizes[i]);
             Nodes.Add(v);
