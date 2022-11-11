@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,11 +6,6 @@ public class Branch
     public Node u;
     public Node v;
     public float weight;
-
-    public Branch()
-    {
-
-    }
 
     public Branch(Node u, Node v)
     {
@@ -31,40 +25,62 @@ public class Node
 {
     public Vector3 Position { get; private set; }
     public Vector3 Size { get; private set; }
-    public List<Branch> Branches { get; private set; } = new();
-    public HashSet<Vector3> Destinations { get; private set; } = new();
+
+    public List<Node> endPoints = new();
 
     public Node()
     {
 
     }
-
     public Node(Vector3 position)
     {
         this.Position = position;
     }
-
     public Node(Vector3 position, Vector3 size)
     {
         this.Position = position;
         this.Size = size;
     }
-
-    public void AddBranch(Branch branch)
+    public Node(Vector3 position, float unitSize)
     {
-        Branches.Add(branch);
+        this.Position = position;
+        InitializeNeighbors(unitSize);
     }
+
+    private void InitializeNeighbors(float unitSize)
+    {
+        neighbors = new();
+        Vector3 neighbor;
+
+        neighbor = this.Position + Vector3.forward * unitSize;
+        neighbors.Add(neighbor);
+        neighbor = this.Position + Vector3.right * unitSize;
+        neighbors.Add(neighbor);
+        neighbor = this.Position - Vector3.forward * unitSize;
+        neighbors.Add(neighbor);
+        neighbor = this.Position - Vector3.right * unitSize;
+        neighbors.Add(neighbor);
+        neighbor = this.Position + Vector3.up * unitSize;
+        neighbors.Add(neighbor);
+        neighbor = this.Position - Vector3.up * unitSize;
+        neighbors.Add(neighbor);
+    }
+    public List<Vector3> neighbors;
 }
 
 public class DungeonGeneration : MonoBehaviour
 {
     public List<Node> Nodes { get; private set; } = new();
     public List<Branch> Branches { get; private set; } = new();
+    public List<Node> AllPathways { get; private set; } = new();
+
+    [SerializeField] private GameObject player;
 
     private RoomGenerator roomGenerator;
     private Delauney3D delauney;
     private MinSpanTree minSpanTree;
     private Grid3D grid3D;
+    private Builder builder;
 
     private void Awake()
     {
@@ -72,6 +88,7 @@ public class DungeonGeneration : MonoBehaviour
         delauney = GetComponent<Delauney3D>();
         minSpanTree = GetComponent<MinSpanTree>();
         grid3D = GetComponent<Grid3D>();
+        builder = GetComponent<Builder>();
     }
 
     private void Start()
@@ -80,33 +97,24 @@ public class DungeonGeneration : MonoBehaviour
         Nodes = roomGenerator.Nodes;
         Vector2Int xSize = new(), ySize = new(), zSize = new();
         roomGenerator.GetGridCoordinates(ref xSize, ref ySize, ref zSize);
-        //Destroy(roomGenerator);
+        Destroy(roomGenerator);
 
         delauney.BowyerWatson(Nodes);
         Branches = delauney.Edges;
-        //Destroy(delauney);
+        Destroy(delauney);
 
         minSpanTree.GetTree(Nodes, Branches);
         Branches = minSpanTree.MinTreeBranches;
         Nodes = minSpanTree.AllNodes;
-        //Destroy(minSpanTree);
-    }
+        Destroy(minSpanTree);
 
-    private void OnDrawGizmos()
-    {
-        if (Nodes == null) return;
-        
-        Gizmos.color = Color.red;
-        for (int i = 0; i < Nodes.Count; i++)
-        {
-            Gizmos.DrawCube(Nodes[i].Position, Nodes[i].Size);
-        }
+        grid3D.RunPathfinding(Branches, Nodes);
+        AllPathways = grid3D.AllPathways;
+        Destroy(grid3D);
 
-        if (Branches == null) return;
-        Gizmos.color = Color.blue;
-        for (int i = 0; i < Branches.Count; i++)
-        {
-            Gizmos.DrawLine(Branches[i].u.Position, Branches[i].v.Position);
-        }
+        builder.BuildDungeon(Nodes, AllPathways);
+        Destroy(builder);
+
+        player.transform.position = Nodes[Random.Range(0, Nodes.Count - 1)].Position;
     }
 }

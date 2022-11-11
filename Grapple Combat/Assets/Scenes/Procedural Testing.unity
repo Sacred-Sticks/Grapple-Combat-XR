@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 1100665437}
   - component: {fileID: 1100665439}
   - component: {fileID: 1100665440}
+  - component: {fileID: 1100665441}
   - component: {fileID: 1100665438}
   m_Layer: 0
   m_Name: Generator
@@ -394,7 +395,7 @@ MonoBehaviour:
     minimumUnitsDistance: 5
   locationData:
     tileRangeX: {x: 0, y: 40}
-    tileRangeY: {x: 0, y: 2}
+    tileRangeY: {x: 0, y: 0}
     tileRangeZ: {x: 0, y: 40}
     sectionsGrid: {x: 2, y: 1, z: 2}
 --- !u!4 &1100665436
@@ -436,6 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11957e046c83b5a469e85c7948835f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 697487828}
 --- !u!114 &1100665439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,3 +465,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitSize: 5
+--- !u!114 &1100665441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100665434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e1707f458cdf94b957c1a3cd78385b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomTiles:
+    wallTiles:
+    - {fileID: 5815720358987672596, guid: 533bef07e5362014286d95b291bba2fe, type: 3}
+    floorTiles:
+    - {fileID: 1663956392783076338, guid: 81ebe073498788c44a6cc654762fcfdd, type: 3}
+    ceilingTiles:
+    - {fileID: 1663956392783076338, guid: 85d8725ff364c3749baf01eb96705c5f, type: 3}
+  hallTiles:
+    wallTiles:
+    - {fileID: 5815720358987672596, guid: 533bef07e5362014286d95b291bba2fe, type: 3}
+    floorTiles:
+    - {fileID: 1663956392783076338, guid: 81ebe073498788c44a6cc654762fcfdd, type: 3}
+    ceilingTiles:
+    - {fileID: 1663956392783076338, guid: 85d8725ff364c3749baf01eb96705c5f, type: 3}

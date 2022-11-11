@@ -22,7 +22,6 @@ public class RoomGenerator : MonoBehaviour
     [System.Serializable]
     private struct RoomData
     {
-        [Header("Do Not Scale")]
         public int numRooms;
         [Space]
         [Header("Scaling Data")]
@@ -45,6 +44,13 @@ public class RoomGenerator : MonoBehaviour
         UpdateRoomScales();
     }
 
+    public void GetGridCoordinates(ref Vector2Int x, ref Vector2Int y, ref Vector2Int z)
+    {
+        x = locationData.tileRangeX;
+        y = locationData.tileRangeY;
+        z = locationData.tileRangeZ;
+    }
+
     public void GenerateRoomData()
     {
         Nodes = new();
@@ -61,13 +67,7 @@ public class RoomGenerator : MonoBehaviour
             Node v = new(originPoints[i], roomSizes[i]);
             Nodes.Add(v);
         }
-    }
-
-    public void GetGridCoordinates(ref Vector2Int x, ref Vector2Int y, ref Vector2Int z)
-    {
-        x = locationData.tileRangeX;
-        y = locationData.tileRangeY;
-        z = locationData.tileRangeZ;
+        grid.SetGridCoordinates(locationData.tileRangeX, locationData.tileRangeY, locationData.tileRangeZ, Nodes);
     }
 
     private void UpdateRoomScales()
@@ -97,13 +97,13 @@ public class RoomGenerator : MonoBehaviour
 
             roomSize = new()
             {
-                x = Mathf.Max((int)(length * random.x), unitSize),
-                y = Mathf.Max((int)(length * random.y), unitSize),
-                z = Mathf.Max((int)(length * random.z), unitSize)
+                x = Mathf.Max((int)(length * random.x), unitSize * 2),
+                y = Mathf.Max((int)(length * random.y), unitSize * 2),
+                z = Mathf.Max((int)(length * random.z), unitSize * 2)
             };
 
-            roomSize /= unitSize;
-            roomSize *= unitSize;
+            roomSize /= unitSize * 2;
+            roomSize *= unitSize * 2;
             roomSizes.Add(roomSize);
         }
 

@@ -85,12 +85,7 @@ public class MinSpanTree : MonoBehaviour
                 {
                     if (n.Position == branch.u.Position) // Check that the branch starts at the node
                     {
-                        if (!n.Destinations.Contains(branch.v.Position)) // Check that the node doesn't already contain the branch
-                        {
-                            n.Destinations.Add(branch.v.Position);
-                            n.Branches.Add(branch);
-                            AllBranches.Add(branch);
-                        }
+                        AllBranches.Add(branch);
                     }
                 }
             }
